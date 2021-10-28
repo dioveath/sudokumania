@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "448856586421",
+    "firebase_url": "https://sudokumania-16b01-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "sudokumania-16b01",
+    "storage_bucket": "sudokumania-16b01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448856586421:android:39d2c3ced560b337bca6fc",
+        "android_client_info": {
+          "package_name": "com.charichagamestudio.sudokumania"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "448856586421-9eapa2gl51ct979fdr4uapuvheu80irf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.charichagamestudio.sudokumania",
+            "certificate_hash": "7695c848bfaed5cebd8aeed4789c5cacc24581f1"
+          }
+        },
+        {
+          "client_id": "448856586421-14j2lau8sab42tfla2kvi7bjre0v0cgo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAWzsKRTyOhJrxzRBHv870XBI6HQ-yCtI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "448856586421-14j2lau8sab42tfla2kvi7bjre0v0cgo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
