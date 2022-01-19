@@ -73,3 +73,6 @@ crashlytics-build.properties
 # This file exceeds Github File limit, useful only for Linux 
 /Assets/Firebase/Plugins/x86_64/FirebaseCppApp-8_2_0.so
 /Assets/Firebase/Plugins/x86_64/FirebaseCppApp-8_2_0.so.meta
+
+# Publish
+/Publish

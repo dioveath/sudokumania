@@ -68,7 +68,6 @@ public class SudokuUtils
 
     public static UnityEvent onLevelsLoaded = new UnityEvent();
 
-
     public static async Task GetAllLevels(FirebaseDatabase dbRef){
 	if(dbRef == null) {
             LoadPuzzlesOffline();

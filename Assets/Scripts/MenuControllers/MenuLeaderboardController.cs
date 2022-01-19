@@ -82,6 +82,7 @@ public class MenuLeaderboardController : MonoBehaviour
 
     public void OnBackPressed(){
         GameManager.Instance().SwitchState(GameState.MAINMENU);
+        AudioManager.Instance().PlayAudio("click_heavy");
     }
 
     public void EnterNewLeaderboardEntry(string username, int highscore){

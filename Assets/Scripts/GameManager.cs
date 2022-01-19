@@ -6,8 +6,6 @@ using Firebase.Auth;
 
 public class GameManager : MonoBehaviour
 {
-    public AudioSource mainMenuMusic;
-
     // UI objects
     [Header("Menu Parent Holder Objects")]
     public GameObject loginHolder;
@@ -17,6 +15,7 @@ public class GameManager : MonoBehaviour
     public GameObject levelSelectHolder;
     public GameObject youwinHolder;
     public GameObject gameplayHolder;
+    public GameObject infoHolder;
 
     // LevelSelect Menu
     [Header("LevelSelect Objects")]
@@ -35,8 +34,6 @@ public class GameManager : MonoBehaviour
 
     void Awake(){
         _instance = this;
-        mainMenuMusic.loop = true;
-        mainMenuMusic.Play();
     }
 
     public static GameManager Instance() {
@@ -47,14 +44,15 @@ public class GameManager : MonoBehaviour
     }
 
     void Start() {
+        SwitchState(GameState.MAINMENU);
         FirebaseManager.Instance().OnFirebaseInitialized.AddListener(OnFirebaseInitialize);
 
-        SwitchState(GameState.LOGIN);
+        AudioManager.Instance().PlayMusic("game_menu");
+        // SaveManager.Instance().
     }
 
 
     public void SwitchState(GameState state){
-
         Debug.Log(_currentState + " > " + state);
 
         // Exit the previous state
@@ -78,6 +76,12 @@ public class GameManager : MonoBehaviour
             case GameState.YOUWIN:
                 youwinHolder.SetActive(false);
                 break;
+	    case GameState.SETTINGS:
+		settingsHolder.SetActive(false);
+		break;
+	    case GameState.INFO:
+                infoHolder.SetActive(false);
+                break;
 
         }
 
@@ -87,7 +91,7 @@ public class GameManager : MonoBehaviour
                 loginHolder.SetActive(true);
                 break;
             case GameState.MAINMENU:
-                welcomeText.text = "Welcome, Mr. " + GameObject.FindWithTag("Player").GetComponent<Player>()._playerData.fullName;
+                // welcomeText.text = "Welcome, Mr. " + GameObject.FindWithTag("Player").GetComponent<Player>()._playerData.fullName;
                 mainMenuHolder.SetActive(true);
                 break;
 	    case GameState.LEVEL_SELECT:
@@ -98,6 +102,10 @@ public class GameManager : MonoBehaviour
                 leaderboardHolder.GetComponent<MenuLeaderboardController>().LoadLeaderboardEntry();
                 leaderboardHolder.SetActive(true);
                 break;
+	    case GameState.SETTINGS:
+                settingsHolder.GetComponent<MenuSettingsController>().UpdateButtonSprite(SaveManager.Instance.settingsData.sound);
+                settingsHolder.SetActive(true);
+		break;
             case GameState.GAMEPLAY:
                 // SudokuManager.Instance().Init();
                 gameplayHolder.SetActive(true);		
@@ -105,16 +113,40 @@ public class GameManager : MonoBehaviour
 	    case GameState.YOUWIN:
                 youwinHolder.SetActive(true);		
                 break;
+	    case GameState.INFO:
+                infoHolder.SetActive(true);
+                break;
         }
 
         _currentState = state;
+    }
+
+    void Update(){
+	if(Input.GetKeyDown(KeyCode.Escape)){
+	    switch(_currentState){
+		case GameState.MAINMENU:
+		    Application.Quit();
+		    break;
+		case GameState.LEVEL_SELECT:
+		    SwitchState(GameState.MAINMENU);
+		    break;
+		case GameState.LEADERBOARD:
+		    SwitchState(GameState.MAINMENU);
+		    break;
+		case GameState.SETTINGS:
+		    SwitchState(GameState.MAINMENU);		    
+                    break;
+		case GameState.INFO:
+                    SwitchState(GameState.MAINMENU);
+                    break;
+            }
+	}
     }
 
     // this should be moved to MenuLevelSelectcontroller
     async void HandleInitializeLevels(){
         SudokuUtils.onLevelsLoaded.AddListener(OnLevelsLoadedCallback);
         loadingUI.SetActive(true);
-
 
 	if(FirebaseManager.Instance().isInitialzed) {
 	    await SudokuUtils.GetAllLevels(FirebaseDatabase.DefaultInstance);
@@ -139,14 +171,15 @@ public class GameManager : MonoBehaviour
             rect.anchorMin = new Vector2(0.5f, 1f);
             rect.anchorMax = new Vector2(0.5f, 1f);
 	    rect.anchoredPosition3D = new Vector3(0, -900 -(i * 400), 0);
-            rect.localScale = Vector3.one;
+	    rect.localScale = Vector3.one;
 
             int levelIndex = i+1;
             buttonObj.GetComponentInChildren<Text>().text = "Level " + levelIndex;
             buttonObj.GetComponent<Button>().onClick.AddListener(() => {
                 SwitchState(GameState.GAMEPLAY);
 		SudokuManager.Instance().Init(levelIndex);
-	    });
+                AudioManager.Instance().PlayAudio("click_wooden1");
+            });
         }
 
 	if(currentTotalButtons > levelsCount){
@@ -163,19 +196,18 @@ public class GameManager : MonoBehaviour
         SudokuUtils.onLevelsLoaded.RemoveListener(OnLevelsLoadedCallback);
     }
 
-
     public void OnFirebaseInitialize(){
         AuthManager.Instance().authStateChangedUEvent.AddListener(OnAuthStateChange);	
     }
-
     
     public void OnAuthStateChange(FirebaseUser user){
-        if(user != null){
-            SwitchState(GameState.MAINMENU);
-	    Debug.Log("Game logged in with: " + user.DisplayName);
-        } else {
-            SwitchState(GameState.LOGIN);
-        }	
+	// NOTE: We're not using any authentication system for initial release
+        // if(user != null){
+        //     SwitchState(GameState.MAINMENU);
+	//     Debug.Log("Game logged in with: " + user.DisplayName);
+        // } else {
+        //     SwitchState(GameState.LOGIN);
+        // }	
     }
 
     
@@ -192,6 +224,7 @@ public enum GameState
     LEADERBOARD,
     SETTINGS,
     LEVEL_SELECT,
+    INFO,
     YOUWIN,
     GAMEPLAY
 };

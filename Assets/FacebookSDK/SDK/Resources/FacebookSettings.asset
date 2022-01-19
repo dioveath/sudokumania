@@ -18,13 +18,13 @@ MonoBehaviour:
   appIds:
   - 1319493481814468
   appLabels:
-  - App Name
+  - Sudoku Mania
   cookie: 1
   logging: 1
   status: 1
   xfbml: 0
   frictionlessRequests: 1
-  androidKeystorePath: D:/Asthav/debug.keystore
+  androidKeystorePath: C:\Charicha Studio\sudokumania\Publish\user.keystore
   iosURLSuffix: 
   appLinkSchemes:
   - list: []

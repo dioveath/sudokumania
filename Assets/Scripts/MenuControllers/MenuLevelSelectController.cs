@@ -11,16 +11,14 @@ public class MenuLevelSelectController : MonoBehaviour
 
     }
 
-
-
-    
-
     public void OnPlayButtonPressed(){
         GameManager.Instance().SwitchState(GameState.GAMEPLAY);
+        AudioManager.Instance().PlayAudio("click_basic");
     }
 
     public void OnBackButtonPressed(){
         GameManager.Instance().SwitchState(GameState.MAINMENU);
+        AudioManager.Instance().PlayAudio("click_heavy");
     }
 
 }
