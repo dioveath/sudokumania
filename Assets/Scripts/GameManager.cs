@@ -99,8 +99,8 @@ public class GameManager : MonoBehaviour
                 levelSelectHolder.SetActive(true);
                 break;
 	    case GameState.LEADERBOARD:
-                leaderboardHolder.GetComponent<MenuLeaderboardController>().LoadLeaderboardEntry();
                 leaderboardHolder.SetActive(true);
+                leaderboardHolder.GetComponent<MenuLeaderboardController>().LoadLeaderboardEntry();
                 break;
 	    case GameState.SETTINGS:
                 settingsHolder.GetComponent<MenuSettingsController>().UpdateButtonSprite(SaveManager.Instance.settingsData.sound);
@@ -111,7 +111,8 @@ public class GameManager : MonoBehaviour
                 gameplayHolder.SetActive(true);		
                 break;
 	    case GameState.YOUWIN:
-                youwinHolder.SetActive(true);		
+                youwinHolder.SetActive(true);
+                youwinHolder.GetComponent<MenuYouwinController>().SetCompletedStats();
                 break;
 	    case GameState.INFO:
                 infoHolder.SetActive(true);
@@ -145,18 +146,21 @@ public class GameManager : MonoBehaviour
 
     // this should be moved to MenuLevelSelectcontroller
     async void HandleInitializeLevels(){
-        SudokuUtils.onLevelsLoaded.AddListener(OnLevelsLoadedCallback);
         loadingUI.SetActive(true);
 
-	if(FirebaseManager.Instance().isInitialzed) {
+	if(FirebaseManager.Instance().isInitialized) {
 	    await SudokuUtils.GetAllLevels(FirebaseDatabase.DefaultInstance);
 	} else {
             await SudokuUtils.GetAllLevels(null);
         }
 
+        loadingUI.SetActive(false);
+
         int levelsCount = SudokuUtils.allSudokuLevels.Count;
         Button[] currentButtons = levelButtonHolder.GetComponentsInChildren<Button>();
         int currentTotalButtons = currentButtons.Length;
+
+        Debug.Log(currentButtons.Length);
 
         for (int i = 0; i < levelsCount; i++){
             GameObject buttonObj;
@@ -185,15 +189,11 @@ public class GameManager : MonoBehaviour
 	if(currentTotalButtons > levelsCount){
 	    Debug.Log("Destroying..!");
             for (int i = levelsCount; i < currentTotalButtons; i++){
-                Destroy(currentButtons[i]);
+                Debug.Log(i);
+                currentButtons[i].gameObject.SetActive(false);
+                DestroyImmediate(currentButtons[i]);
             }
 	}
-    }
-
-    public void OnLevelsLoadedCallback(){
-        Debug.Log("loadingUI");
-        loadingUI.SetActive(false);
-        SudokuUtils.onLevelsLoaded.RemoveListener(OnLevelsLoadedCallback);
     }
 
     public void OnFirebaseInitialize(){

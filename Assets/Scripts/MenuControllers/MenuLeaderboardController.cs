@@ -1,47 +1,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using Firebase.Database;
-
-
 
 public class MenuLeaderboardController : MonoBehaviour
 {
 
     public Text highscoreTextPrefab;
     public GameObject highscoreHolder;
+    public Image loadingImage;
 
     private FirebaseDatabase _dbRef;
-    private List<LeaderboardEntry> entries;
-    private List<Text> entryTexts;
+    private List<LeaderboardEntry> _entries;
+    private List<Text> _entryTexts;
 
 
     void Awake(){
-	FirebaseManager.Instance().OnFirebaseInitialized.AddListener(OnLeaderboardFirebaseInitialize);
-	entryTexts = new List<Text>();
-    }
-
-    void Start(){
+	_entries = new List<LeaderboardEntry>();
+	_entryTexts = new List<Text>();
+	if(FirebaseManager.Instance().isInitialized) {
+            _dbRef = FirebaseDatabase.DefaultInstance;
+        }	
     }
 
     public void OnLeaderboardFirebaseInitialize(){
-	// FIXME: Why thisn't working
-        _dbRef = FirebaseDatabase.DefaultInstance;
+	// FIXME: Why thisn't working,
+	// Reason: this script attached object is disabled and start is not called so not subscribed to event
+        Debug.Log("Welcome to the good night!");
     }
 
     public async void LoadLeaderboardEntry(){
         Debug.Log("Loading leaderboard entries");
+        _entries.Clear();
 
-        entries = new List<LeaderboardEntry>();
-        _dbRef = FirebaseDatabase.DefaultInstance;
         if(_dbRef == null) {
-            entries.Add(new LeaderboardEntry("Couldn't Load Data!", 0));
+            _entries.Add(new LeaderboardEntry("Couldn't Load Data!", 0));
             Debug.LogWarning("_dbRef == null");
             return;
         }
 
-	DataSnapshot snapshot = await _dbRef.GetReference("Scores").OrderByChild("highscore").LimitToFirst(10).GetValueAsync();
+        loadingImage.gameObject.SetActive(true);
+        _entryTexts.ForEach((t) => t.gameObject.SetActive(false));
+
+        DataSnapshot snapshot = await _dbRef.GetReference("Scores").OrderByChild("highscore").LimitToFirst(10).GetValueAsync();
 	if(snapshot == null) {
 	    Debug.LogWarning($"Loading leaderboard failed with");
             return;
@@ -49,21 +50,22 @@ public class MenuLeaderboardController : MonoBehaviour
 	    
 	foreach(DataSnapshot childSnapshot in snapshot.Children){
             LeaderboardEntry entry = JsonUtility.FromJson<LeaderboardEntry>(childSnapshot.GetRawJsonValue());
-            entries.Add(entry);
+            _entries.Add(entry);
         }
+
 
         UpdateLeaderboardUI();
     }
 
     public void UpdateLeaderboardUI(){
-        for (int i = 0; i < entries.Count; i++){
-	    if(i >= entryTexts.Count) {
+        for (int i = 0; i < _entries.Count; i++){
+	    if(i >= _entryTexts.Count) {
                 Text txtObj = Instantiate(highscoreTextPrefab, Vector3.zero, Quaternion.identity);
-                entryTexts.Add(txtObj);
+                _entryTexts.Add(txtObj);
             }
 
-            LeaderboardEntry entry = entries[i];
-            Text txt = entryTexts[i];
+            LeaderboardEntry entry = _entries[i];
+            Text txt = _entryTexts[i];
             RectTransform rect = txt.GetComponent<RectTransform>();
 	    rect.SetParent(highscoreHolder.transform);
             rect.anchorMin = new Vector2(0.5f, 1);
@@ -72,12 +74,17 @@ public class MenuLeaderboardController : MonoBehaviour
             rect.localScale = Vector3.one;
 
             txt.text = i + 1 + ". " + entry.username + "  -  " + entry.highscore;
-	    
         }
-        for (int j = entries.Count; j < entryTexts.Count; j++) {
-            Destroy(entryTexts[j].gameObject);
-            entryTexts.Remove(entryTexts[j]);
+
+        for (int j = _entries.Count; j < _entryTexts.Count; j++) {
+            _entryTexts[j].gameObject.SetActive(false);
+            DestroyImmediate(_entryTexts[j].gameObject);
+            _entryTexts.Remove(_entryTexts[j]);
         }
+
+        loadingImage.gameObject.SetActive(false);
+        _entryTexts.ForEach((t) => t.gameObject.SetActive(true));		
+
     }
 
     public void OnBackPressed(){

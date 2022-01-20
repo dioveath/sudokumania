@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Firebase.Database;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class SudokuUtils
 {
@@ -63,20 +62,21 @@ public class SudokuUtils
 	{8, 2, 9, 5, 4, 3, 1, 0, 0},
     };
 
-    private static List<int[,]> allSudokus = new List<int[,]>();
     public static List<SudokuLevel> allSudokuLevels = new List<SudokuLevel>();
 
-    public static UnityEvent onLevelsLoaded = new UnityEvent();
+    public static async Task<List<SudokuLevel>> GetAllLevels(FirebaseDatabase dbRef){
+	List<PuzzleToUpload> allSudokus = new List<PuzzleToUpload>();
 
-    public static async Task GetAllLevels(FirebaseDatabase dbRef){
-	if(dbRef == null) {
-            LoadPuzzlesOffline();
+        if(dbRef == null) {
+            // LoadPuzzlesOffline();
+            Debug.LogError("Firebase database not initialized!");
         } else {
 	    try {
-		await LoadPuzzlesFromDatabase(dbRef);
+		allSudokus = await LoadPuzzlesFromDatabase(dbRef);
+		
 	    } catch(Exception e){
-                LoadPuzzlesOffline();
-                Debug.Log("Exception: " + e.Message);
+                // LoadPuzzlesOffline();
+                Debug.LogError("Exception: " + e.Message);
             }
         }
 
@@ -84,8 +84,8 @@ public class SudokuUtils
 
         for (int i = 0; i < allSudokus.Count; i++)
 	{
-
-	    int[,] solvedPuzzle = SudokuUtils.SudokuSolve(allSudokus[i]);
+            int[,] puzzle = StringToPuzzle(allSudokus[i].puzzle);
+            int[,] solvedPuzzle = SudokuUtils.SudokuSolve(puzzle);
 	    if (!isSudokuValid(solvedPuzzle))
 	    {
 		Debug.LogWarning("Suduku " + (i+1) + " Not Solvable!");
@@ -95,21 +95,18 @@ public class SudokuUtils
 
 	    int[,] inputArray = new int[9, 9];
 	    int[,] puzzleArray = new int[9, 9];
-	    Array.Copy(allSudokus[i], inputArray, 9 * 9);
-	    Array.Copy(allSudokus[i], puzzleArray, 9 * 9);
+	    Array.Copy(puzzle, inputArray, 9 * 9);
+	    Array.Copy(puzzle, puzzleArray, 9 * 9);
 
 	    if(i < allSudokuLevels.Count) {
-                allSudokuLevels[i] = new SudokuLevel(inputArray, puzzleArray, solvedPuzzle);
+                allSudokuLevels[i] = new SudokuLevel(inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points);
             } else {
-		allSudokuLevels.Add(new SudokuLevel(inputArray, puzzleArray, solvedPuzzle));
+		allSudokuLevels.Add(new SudokuLevel(inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points));
 	    }
-		
 	}
 
-        onLevelsLoaded?.Invoke();
-        // return allSudokuLevels;
+        return allSudokuLevels;
     }
-
     
     // public static SudokuLevel GenerateSudokuLevel(){
     //     int[,] inputArray = new int[9, 9];
@@ -242,39 +239,40 @@ public class SudokuUtils
         return possibleValues;
     }
 
-    public static void LoadPuzzlesOffline(){
-        Debug.Log("Loading puzzles offline..!");
-        allSudokus.Clear();
-        allSudokus.Add(debugSudoku);
-        allSudokus.Add(easySudoku);
-        allSudokus.Add(mediumSudoku);
-        allSudokus.Add(hardSudoku);
-    }
+    // public static List<int LoadPuzzlesOffline(){
+    //     Debug.Log("Loading puzzles offline..!");
+    //     List<int[,]> allSudokus = new List<int[,]>();
+    //     allSudokus.Add(debugSudoku);
+    //     allSudokus.Add(easySudoku);
+    //     allSudokus.Add(mediumSudoku);
+    //     allSudokus.Add(hardSudoku);
+    //     return allSudokus;
+    // }
 
-    public static async Task LoadPuzzlesFromDatabase(FirebaseDatabase dbRef){
+    public static async Task<List<PuzzleToUpload>> LoadPuzzlesFromDatabase(FirebaseDatabase dbRef){
         Debug.Log("Loading puzzles online....");
-        allSudokus.Clear();
+	List<PuzzleToUpload> allPuzzles = new List<PuzzleToUpload>();
 
         DataSnapshot snapshot = await dbRef.GetReference("Puzzles").LimitToFirst(10).GetValueAsync();
 
         foreach(DataSnapshot childSnapshot in snapshot.Children){
             string json = childSnapshot.GetRawJsonValue();
-            string puzzleString = json.Remove(0, 1);
-            // Debug.Log("LoadPuzzlesFromDatabase Puzzle String: " + puzzleString);
-            int[,] puzzle = StringToPuzzle(puzzleString);
-            allSudokus.Add(puzzle);
+            PuzzleToUpload pzu = JsonUtility.FromJson<PuzzleToUpload>(json);
+            allPuzzles.Add(pzu);
         }
+	
+        return allPuzzles;
     }
     
 
-    // public static void WritePuzzlesToDatabase(FirebaseDatabase dbRef){
-    //     string puzzleString = PuzzleToString(debugSudoku);
-    //     dbRef.GetReference("Puzzles").Push().SetValueAsync(puzzleString);
-    // }
+    public static void WritePuzzlesToDatabase(FirebaseDatabase dbRef, PuzzleToUpload pzu){
+        string pzuString = JsonUtility.ToJson(pzu);
+        Debug.Log(pzuString);
+        dbRef.GetReference("Puzzles").Push().SetRawJsonValueAsync(pzuString);
+    }
 
 
     public static void Main(){
-
         // if(isSudokuSolvable(easySudoku)){
         //     Console.WriteLine("Solvable");
         // } else {
@@ -297,11 +295,11 @@ public class SudokuUtils
 		//     result += ", ";
             }
         }
+	// Debug.Log("")
         return result;
     }
 
     public static int[,] StringToPuzzle(string puzzleString){
-        // Debug.Log("PuzzleString: " + puzzleString);
         int[,] puzzle = new int[9, 9];
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 9; j++){
@@ -353,11 +351,13 @@ public struct SudokuLevel {
     public int[,] sudokuArray;
     public int[,] inputSudokuArray;
     public int[,] validSolution;
+    public int points;
 
-    public SudokuLevel(int[,] __sudokuArray, int[,] __inputSudokuArray, int[,] __validSolution){
+    public SudokuLevel(int[,] __sudokuArray, int[,] __inputSudokuArray, int[,] __validSolution, int points){
         this.sudokuArray = __sudokuArray;
         this.inputSudokuArray = __inputSudokuArray;
         this.validSolution = __validSolution;
+        this.points = points;
     }
 
     public SudokuLevel Copy(){
@@ -369,6 +369,6 @@ public struct SudokuLevel {
         Array.Copy(inputSudokuArray, newInputSudokuArray, newSudokuArray.Length);
         Array.Copy(validSolution, newValidSolution, newSudokuArray.Length);	
 
-        return new SudokuLevel(newSudokuArray, newInputSudokuArray, newValidSolution);
+        return new SudokuLevel(newSudokuArray, newInputSudokuArray, newValidSolution, points);
     }
 }

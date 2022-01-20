@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Firebase.Database;
 
 public class SudokuManager : MonoBehaviour
 {
@@ -10,8 +7,11 @@ public class SudokuManager : MonoBehaviour
     private NumberBlock _activeNumberBlock;
     private int _activeY;
     private int _activeX;
+
     private SudokuLevel _currentLevel;
     private int _currentLevelIndex;
+    private float _timeElapsed = 0.0f;
+    private bool _levelStarted = false;
 
     private bool _isInputDisabled = false; 
 
@@ -26,16 +26,6 @@ public class SudokuManager : MonoBehaviour
         return _instance;
     }
 
-    void Start()
-    {
-        // GameManager.Instance().OnFirebaseInitialized.AddListener(OnFirebaseInitialize);
-        // SudokuUtils.onLevelsLoaded.AddListener(OnLevelsLoadedCallback);
-    }
-
-    public void OnLevelsLoadedCallback(){
-        Debug.Log("Levels loaded!");
-    }
-
     public void Init(int level = 1){
         _currentLayout = SudokuLayoutGenerator.Instance().GenerateSudokuLayout();
         InputManager.Instance().GenerateInputBlocks();
@@ -48,10 +38,14 @@ public class SudokuManager : MonoBehaviour
         } else { 
             Debug.LogWarning("No Sudoku Level - " + level);
         }
+
+        _timeElapsed = 0.0f;
+        _levelStarted = true;
     }
 
     public void Finish(){
         Debug.Log("Cleaning up the game...!");
+        _levelStarted = false;
         foreach(NumberBlock block in _currentLayout) {
             Destroy(block.gameObject);
 	}
@@ -63,7 +57,10 @@ public class SudokuManager : MonoBehaviour
  
     void Update()
     {
-	if(_isInputDisabled) return;
+	if(_levelStarted)
+	    _timeElapsed += Time.deltaTime;
+
+        if(_isInputDisabled) return;
         if(_currentLayout == null || _currentLayout.Length == 0) return;
 
         for (int i = 0; i < 9; i++){
@@ -94,9 +91,6 @@ public class SudokuManager : MonoBehaviour
 
     public void ReloadLevel(){
         Init(_currentLevelIndex);
-	// NOTE: We are currently accesing levels through SudokuUtils static class
-	// all data are bound to it, so we need reset the input of SudokuLevel
-	// FIXME:
 
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 9; j++){
@@ -136,6 +130,8 @@ public class SudokuManager : MonoBehaviour
 	if(SudokuUtils.isSudokuValid(_currentLevel.inputSudokuArray)) {
             AudioManager.Instance().PlayAudio("applause6");
             GameManager.Instance().SwitchState(GameState.YOUWIN);
+
+            _levelStarted = false;
         }
     }
 
@@ -168,7 +164,15 @@ public class SudokuManager : MonoBehaviour
             }
 	}
     }
-    
+
+
+    public float GetTimeElapsed(){
+        return _timeElapsed;
+    }
+
+    public int GetCurrentLevelPoint(){
+        return _currentLevel.points;
+    }
 
 }
 

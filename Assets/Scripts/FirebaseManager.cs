@@ -2,16 +2,16 @@ using UnityEngine;
 using UnityEngine.Events;
 
 using Firebase;
+using Firebase.Extensions;
 using Firebase.Analytics;
 
 public class FirebaseManager : MonoBehaviour
 {
 
     public UnityEvent OnFirebaseInitialized;
-    public bool isInitialzed = false; //TODO: Rename 
+    public bool isInitialized = false; 
 
     private static FirebaseManager _instance;
-
     public static FirebaseManager Instance(){
 	if(_instance == null){
             Debug.LogWarning("Error: No Firebase Manager insantiated yet!");
@@ -35,17 +35,16 @@ public class FirebaseManager : MonoBehaviour
 
 
     void FirebaseInit(){
-	FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
+	FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
 	    if(task.Exception != null){
 		Debug.LogWarning($"Failed to initialize Firebase with { task.Exception }");
 		return;
 	    }
 	    FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
 	    OnFirebaseInitialized?.Invoke();
-	    isInitialzed = true;
-	    Debug.Log("Firease Initialized..!");
+	    isInitialized = true;
+	    Debug.Log("Firebase Initialized..!");
 	});	
     }
-    
 
 }
