@@ -44,9 +44,9 @@ public class GameManager : MonoBehaviour
     }
 
     void Start() {
-        SwitchState(GameState.MAINMENU);
         FirebaseManager.Instance().OnFirebaseInitialized.AddListener(OnFirebaseInitialize);
 
+        SwitchState(GameState.MAINMENU);
         AudioManager.Instance().PlayMusic("game_menu");
         // SaveManager.Instance().
     }
@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.MAINMENU:
                 // welcomeText.text = "Welcome, Mr. " + GameObject.FindWithTag("Player").GetComponent<Player>()._playerData.fullName;
+                mainMenuHolder.GetComponent<MenuMainController>().SetSudokuPoints();
                 mainMenuHolder.SetActive(true);
                 break;
 	    case GameState.LEVEL_SELECT:

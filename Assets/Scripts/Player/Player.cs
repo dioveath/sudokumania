@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 public class Player : MonoBehaviour
 {
 
@@ -22,11 +21,12 @@ public class Player : MonoBehaviour
             DestroyImmediate(this.gameObject);
         }
         _instance = this;
+	LoadSavedPlayerData();
+        Debug.Log("Player data loaded!");
     }
 
     void Start()
     {
-        LoadSavedPlayerData();
     }
 
     public void LoadSavedPlayerData(){

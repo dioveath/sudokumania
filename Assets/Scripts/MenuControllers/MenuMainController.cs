@@ -1,9 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuMainController : MonoBehaviour
 {
+
+    public Text sudokuPointsText;
+
+    void Start(){
+    }
+
+    public void SetSudokuPoints(){
+	int points = Player.Instance.playerData.points;
+	sudokuPointsText.text = $"Your SP: {points}";
+	Debug.Log(Player.Instance.playerData.points);
+	Debug.Log(points);		    
+    }
 
     public void OnPlayButtonPressed(){
         AudioManager.Instance().PlayAudio("click_basic");
