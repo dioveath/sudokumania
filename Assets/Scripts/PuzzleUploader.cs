@@ -28,8 +28,7 @@ public class PuzzleUploader : MonoBehaviour
     void OnUploadPressed() {
         string puzzle = puzzleField.text;
         int points = Int32.Parse(pointsField.text);
-        PuzzleToUpload puzzleToUpload = new PuzzleToUpload(puzzle, points);
-        SudokuUtils.WritePuzzlesToDatabase(_dbRef, puzzleToUpload);
+        SudokuUtils.WritePuzzlesToDatabase(_dbRef, puzzle, points);
         messageText.text = "Uploaded successfully.";
     }
 
@@ -45,10 +44,12 @@ public class PuzzleUploader : MonoBehaviour
 
 [Serializable]
 public struct PuzzleToUpload {
+    public string id;
     public string puzzle;
     public int points;
 
-    public PuzzleToUpload(string __puzzle, int __points){
+    public PuzzleToUpload(string __id, string __puzzle, int __points){
+        this.id = __id;
         this.puzzle = __puzzle;
         this.points = __points;
     }

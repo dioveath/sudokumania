@@ -1,35 +1,41 @@
-using Firebase.Auth;
 using UnityEngine;
+
 
 public class Player : MonoBehaviour
 {
-    public PlayerData _playerData { get; private set; }
 
-    void Start()
-    {
-        AuthManager.Instance().authStateChangedUEvent.AddListener(AuthStateChangeCallback);
-	_playerData = new PlayerData();
-    }
+    public PlayerData playerData;
+    public bool saveExists = false;
 
-    private void AuthStateChangeCallback(FirebaseUser user)
-    {
-	if(user != null){
-	    _playerData.id = user.UserId;
-	    _playerData.email = user.Email;
-	    _playerData.fullName = user.DisplayName;
-	    _playerData.authProvider = user.ProviderId;
-
-            SaveManager.Instance.SavePlayerData(_playerData); 
+    private static Player _instance;
+    public static Player Instance {
+	get {
+	    if(_instance == null) {
+                Debug.LogError("No instantiation Player Script");
+            }
+            return _instance;
         }
     }
 
-    public void UpdatePlayer(PlayerData newData){
-	_playerData.id = newData.id;
-	_playerData.email = newData.email;
-	_playerData.fullName = newData.fullName;
-	_playerData.authProvider = newData.authProvider;
+    void Awake(){
+	if(_instance != null){
+            DestroyImmediate(this.gameObject);
+        }
+        _instance = this;
+    }
 
-	SaveManager.Instance.SavePlayerData(_playerData); 	
+    void Start()
+    {
+        LoadSavedPlayerData();
+    }
+
+    public void LoadSavedPlayerData(){
+        playerData = SaveManager.Instance.LoadPlayerData();
+	if(playerData != null) saveExists = true;
+    }
+
+    public void SaveCurrentPlayerData(){
+	SaveManager.Instance.SavePlayerData(playerData);
     }
 
 }

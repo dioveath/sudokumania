@@ -174,6 +174,10 @@ public class SudokuManager : MonoBehaviour
         return _currentLevel.points;
     }
 
+    public SudokuLevel GetCurrentSudokuLevel(){
+        return _currentLevel;
+    }
+
 }
 
 

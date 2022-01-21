@@ -6,7 +6,7 @@ class FirebaseDatabaseManager : MonoBehaviour
 {
 
     private DatabaseReference _db;
-    private bool isInitialized = false;
+    // private bool isInitialized = false;
 
     private static FirebaseDatabaseManager _instance;
     public static FirebaseDatabaseManager Instance
@@ -33,24 +33,24 @@ class FirebaseDatabaseManager : MonoBehaviour
 
     void FirebaseInitializedCallback(){
         _db = FirebaseDatabase.DefaultInstance.RootReference;
-        isInitialized = true;
+        // isInitialized = true;
     }
 
-    public void SavePlayerToDB(PlayerData pd){
-	if(!isInitialized) {
-            Debug.LogError("Firebase Database not Initialized!");
-            return;
-	}
+    // public void SavePlayerToDB(PlayerData pd){
+    // 	if(!isInitialized) {
+    //         Debug.LogError("Firebase Database not Initialized!");
+    //         return;
+    // 	}
 
-        string json = JsonUtility.ToJson(pd);
-        _db.Child("players").Child(pd.id).SetRawJsonValueAsync(json).ContinueWith(task => {
-	    if(task.IsFaulted){
-                Debug.LogError("Error: " + task.Exception);
-            }
-	    if(task.IsCompleted) {
-                Debug.Log("Player Data saved!");
-            }
-	});
-    }
+    //     string json = JsonUtility.ToJson(pd);
+    //     _db.Child("players").Child(pd.id).SetRawJsonValueAsync(json).ContinueWith(task => {
+    // 	    if(task.IsFaulted){
+    //             Debug.LogError("Error: " + task.Exception);
+    //         }
+    // 	    if(task.IsCompleted) {
+    //             Debug.Log("Player Data saved!");
+    //         }
+    // 	});
+    // }
 
 }

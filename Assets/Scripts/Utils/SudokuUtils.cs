@@ -99,9 +99,9 @@ public class SudokuUtils
 	    Array.Copy(puzzle, puzzleArray, 9 * 9);
 
 	    if(i < allSudokuLevels.Count) {
-                allSudokuLevels[i] = new SudokuLevel(inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points);
+                allSudokuLevels[i] = new SudokuLevel(allSudokus[i].id, inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points);
             } else {
-		allSudokuLevels.Add(new SudokuLevel(inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points));
+		allSudokuLevels.Add(new SudokuLevel(allSudokus[i].id, inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points));
 	    }
 	}
 
@@ -265,10 +265,12 @@ public class SudokuUtils
     }
     
 
-    public static void WritePuzzlesToDatabase(FirebaseDatabase dbRef, PuzzleToUpload pzu){
-        string pzuString = JsonUtility.ToJson(pzu);
-        Debug.Log(pzuString);
-        dbRef.GetReference("Puzzles").Push().SetRawJsonValueAsync(pzuString);
+    public static void WritePuzzlesToDatabase(FirebaseDatabase dbRef, string puzzle, int points)
+    {
+        DatabaseReference pushedRef = dbRef.GetReference("").Child("Puzzles").Push();
+        PuzzleToUpload newPzu = new PuzzleToUpload(pushedRef.Key, puzzle, points);
+        string pzuString = JsonUtility.ToJson(newPzu);
+        pushedRef.SetRawJsonValueAsync(pzuString);
     }
 
 
@@ -347,13 +349,16 @@ public class SudokuUtils
 
 }
 
+[Serializable]
 public struct SudokuLevel {
+    public string id;
     public int[,] sudokuArray;
     public int[,] inputSudokuArray;
     public int[,] validSolution;
     public int points;
 
-    public SudokuLevel(int[,] __sudokuArray, int[,] __inputSudokuArray, int[,] __validSolution, int points){
+    public SudokuLevel(string __id, int[,] __sudokuArray, int[,] __inputSudokuArray, int[,] __validSolution, int points){
+        this.id = __id;
         this.sudokuArray = __sudokuArray;
         this.inputSudokuArray = __inputSudokuArray;
         this.validSolution = __validSolution;
@@ -369,6 +374,6 @@ public struct SudokuLevel {
         Array.Copy(inputSudokuArray, newInputSudokuArray, newSudokuArray.Length);
         Array.Copy(validSolution, newValidSolution, newSudokuArray.Length);	
 
-        return new SudokuLevel(newSudokuArray, newInputSudokuArray, newValidSolution, points);
+        return new SudokuLevel(id, newSudokuArray, newInputSudokuArray, newValidSolution, points);
     }
 }

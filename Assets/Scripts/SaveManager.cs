@@ -1,9 +1,12 @@
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour {
 
-    private PlayerData _lastPlayerData;
     public SettingsData settingsData; // stores the settingsData
+    private string _path;
 
     private static SaveManager _instance;
     public static SaveManager Instance {
@@ -22,11 +25,32 @@ public class SaveManager : MonoBehaviour {
 	}
         _instance = this;
         LoadSettings();
+	_path = Application.persistentDataPath + "/save.chc";    	
     }
 
     public void SavePlayerData(PlayerData pd){
-        PlayerPrefs.SetString(pd.id, JsonUtility.ToJson(pd));
-        FirebaseDatabaseManager.Instance.SavePlayerToDB(pd);
+        try
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(_path, FileMode.Create);
+            formatter.Serialize(stream, pd);
+            stream.Close();
+        } catch(Exception e){
+            Debug.LogError("Error: " + e.Message);
+        }
+    }
+
+    public PlayerData LoadPlayerData(){
+	try {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(_path, FileMode.Open);
+            PlayerData pd = formatter.Deserialize(stream) as PlayerData;
+            stream.Close();
+            return pd;
+        } catch (Exception e){
+            Debug.LogError("Error: " + e.Message);
+            return null;
+        }
     }
 
     public void SaveGameSettings(){
