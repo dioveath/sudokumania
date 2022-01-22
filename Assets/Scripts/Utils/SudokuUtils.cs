@@ -73,9 +73,8 @@ public class SudokuUtils
         } else {
 	    try {
 		allSudokus = await LoadPuzzlesFromDatabase(dbRef);
-		
 	    } catch(Exception e){
-                // LoadPuzzlesOffline();
+                allSudokus.Add(new PuzzleToUpload("test", PuzzleToString(debugSudoku), 1000));
                 Debug.LogError("Exception: " + e.Message);
             }
         }

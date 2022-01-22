@@ -11,7 +11,7 @@ public class SudokuManager : MonoBehaviour
     private SudokuLevel _currentLevel;
     private int _currentLevelIndex;
     private float _timeElapsed = 0.0f;
-    private bool _levelStarted = false;
+    private bool _levelRunning = false;
 
     private bool _isInputDisabled = false; 
 
@@ -40,12 +40,12 @@ public class SudokuManager : MonoBehaviour
         }
 
         _timeElapsed = 0.0f;
-        _levelStarted = true;
+        _levelRunning = true;
     }
 
     public void Finish(){
         Debug.Log("Cleaning up the game...!");
-        _levelStarted = false;
+        _levelRunning = false;
         foreach(NumberBlock block in _currentLayout) {
             Destroy(block.gameObject);
 	}
@@ -57,7 +57,7 @@ public class SudokuManager : MonoBehaviour
  
     void Update()
     {
-	if(_levelStarted)
+	if(_levelRunning)
 	    _timeElapsed += Time.deltaTime;
 
         if(_isInputDisabled) return;
@@ -103,7 +103,6 @@ public class SudokuManager : MonoBehaviour
         }	
     }
 
-
     public void SetInputActive(bool active){
         _isInputDisabled = !active;
     }
@@ -131,7 +130,7 @@ public class SudokuManager : MonoBehaviour
             AudioManager.Instance().PlayAudio("applause6");
             GameManager.Instance().SwitchState(GameState.YOUWIN);
 
-            _levelStarted = false;
+            _levelRunning = false;
         }
     }
 
@@ -165,6 +164,15 @@ public class SudokuManager : MonoBehaviour
 	}
     }
 
+    public void PauseSudokuGame(){
+        SetInputActive(false);
+        _levelRunning = false;
+    }
+
+    public void ResumeSudokuGame(){
+        SetInputActive(true);
+        _levelRunning = true;	
+    }
 
     public float GetTimeElapsed(){
         return _timeElapsed;

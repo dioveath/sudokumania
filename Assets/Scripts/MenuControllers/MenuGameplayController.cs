@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class MenuGameplayController : MonoBehaviour
 {
+    public GameObject pauseMenuHolder;
+
     public void OnMenuPressed(){
 	if(Player.Instance.saveExists) {
 	    Player.Instance.playerData.playingLevel = SudokuManager.Instance().GetCurrentSudokuLevel();
@@ -10,7 +12,8 @@ public class MenuGameplayController : MonoBehaviour
         }
         Player.Instance.SaveCurrentPlayerData();
 
-        GameManager.Instance().SwitchState(GameState.MAINMENU);
+        pauseMenuHolder.SetActive(true);
+        SudokuManager.Instance().PauseSudokuGame();
         AudioManager.Instance().PlayAudio("click_basic");
     }
 
@@ -20,4 +23,17 @@ public class MenuGameplayController : MonoBehaviour
     public void OnSettingsPressed(){
         AudioManager.Instance().PlayAudio("click_basic");  
     }
+
+    public void OnResumePressed(){
+        pauseMenuHolder.SetActive(false);
+        SudokuManager.Instance().ResumeSudokuGame();
+        AudioManager.Instance().PlayAudio("click_basic");
+    }
+
+    public void OnHomePressed(){
+        pauseMenuHolder.SetActive(false);
+        GameManager.Instance().SwitchState(GameState.MAINMENU);
+        AudioManager.Instance().PlayAudio("click_basic");
+    }
+
 }
