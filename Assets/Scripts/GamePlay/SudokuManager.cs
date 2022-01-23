@@ -43,6 +43,7 @@ public class SudokuManager : MonoBehaviour
 
         _timeElapsed = 0.0f;
         _levelRunning = true;
+        SetInputActive(true);
     }
 
     public void Finish(){

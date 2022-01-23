@@ -40,7 +40,7 @@ public class AdsManager : MonoBehaviour
 
 
 #if DEBUG
-        string interstitialAdUnitId = "ca-app-pub-3940256099942544/6300978111";
+        string interstitialAdUnitId = "ca-app-pub-3940256099942544/1033173712";
 #else
         string interstitialAdUnitId = "ca-app-pub-4040965046942345/8339675391";
 #endif

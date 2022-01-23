@@ -1984,6 +1984,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 441532426}
   m_CullTransparentMesh: 1
+--- !u!1 &461565796
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 461565797}
+  m_Layer: 0
+  m_Name: SudokuHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &461565797
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461565796}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.509512, y: -0.9289046, z: 0.3756482}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1567271184}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &466314103
 GameObject:
   m_ObjectHideFlags: 0
@@ -5124,8 +5154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberBlockPrefab: {fileID: 835571188077092696, guid: 38f5c5c77a3b244439fc70fb7c63f6b9,
     type: 3}
-  blockSize: 0.5
-  blockGap: 0.1
+  blockSize: 0.59
+  blockGap: 0.13
   offsetPosition: {x: 0, y: 1}
 --- !u!4 &1567271184
 Transform:
@@ -5137,7 +5167,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.509512, y: 0.9289046, z: -0.3756482}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 461565797}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5758,7 +5789,6 @@ MonoBehaviour:
       id: 
       points: 0
     points: 0
-  saveExists: 0
 --- !u!1 &1796523000
 GameObject:
   m_ObjectHideFlags: 0

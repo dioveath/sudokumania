@@ -5,11 +5,7 @@ public class MenuGameplayController : MonoBehaviour
     public GameObject pauseMenuHolder;
 
     public void OnMenuPressed(){
-	if(Player.Instance.saveExists) {
-	    Player.Instance.playerData.playingLevel = SudokuManager.Instance().GetCurrentSudokuLevel();
-	} else {
-            Player.Instance.playerData = new PlayerData(SudokuManager.Instance().GetCurrentSudokuLevel());
-        }
+        Player.Instance.playerData.playingLevel = SudokuManager.Instance().GetCurrentSudokuLevel();
         Player.Instance.SaveCurrentPlayerData();
 
         pauseMenuHolder.SetActive(true);

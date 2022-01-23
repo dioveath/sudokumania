@@ -4,7 +4,6 @@ public class Player : MonoBehaviour
 {
 
     public PlayerData playerData;
-    public bool saveExists = false;
 
     private static Player _instance;
     public static Player Instance {
@@ -31,7 +30,8 @@ public class Player : MonoBehaviour
 
     public void LoadSavedPlayerData(){
         playerData = SaveManager.Instance.LoadPlayerData();
-	if(playerData != null) saveExists = true;
+	if(playerData == null)
+            playerData = new PlayerData();
     }
 
     public void SaveCurrentPlayerData(){
