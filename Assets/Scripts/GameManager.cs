@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void OnFirebaseInitialize(){
-        AuthManager.Instance().authStateChangedUEvent.AddListener(OnAuthStateChange);	
+        // AuthManager.Instance().authStateChangedUEvent.AddListener(OnAuthStateChange);	
     }
     
     public void OnAuthStateChange(FirebaseUser user){

@@ -26,7 +26,6 @@ public class AudioManager : MonoBehaviour
 
     void Start(){
         _sfxSource = GetComponent<AudioSource>();
-
     }
 
     public void SetSound(bool sound){

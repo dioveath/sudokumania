@@ -24,7 +24,7 @@ MonoBehaviour:
   status: 1
   xfbml: 0
   frictionlessRequests: 1
-  androidKeystorePath: C:\Charicha Studio\sudokumania\Publish\user.keystore
+  androidKeystorePath: Publish/user.keystore
   iosURLSuffix: 
   appLinkSchemes:
   - list: []

@@ -39,6 +39,8 @@ public class SudokuManager : MonoBehaviour
             Debug.LogWarning("No Sudoku Level - " + level);
         }
 
+        AdsManager.Instance.RequestInterstitial();
+
         _timeElapsed = 0.0f;
         _levelRunning = true;
     }
@@ -129,6 +131,8 @@ public class SudokuManager : MonoBehaviour
 	if(SudokuUtils.isSudokuValid(_currentLevel.inputSudokuArray)) {
             AudioManager.Instance().PlayAudio("applause6");
             GameManager.Instance().SwitchState(GameState.YOUWIN);
+
+            AdsManager.Instance.ShowInterstitial();
 
             _levelRunning = false;
         }
