@@ -48,7 +48,6 @@ public class GameManager : MonoBehaviour
 
         SwitchState(GameState.MAINMENU);
         AudioManager.Instance().PlayMusic("game_menu");
-        // SaveManager.Instance().
     }
 
 
@@ -77,7 +76,8 @@ public class GameManager : MonoBehaviour
                 youwinHolder.SetActive(false);
                 break;
 	    case GameState.SETTINGS:
-		settingsHolder.SetActive(false);
+                settingsHolder.GetComponent<MenuSettingsController>().Cleanup();
+                settingsHolder.SetActive(false);
 		break;
 	    case GameState.INFO:
                 infoHolder.SetActive(false);
@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
                 leaderboardHolder.GetComponent<MenuLeaderboardController>().LoadLeaderboardEntry();
                 break;
 	    case GameState.SETTINGS:
-                settingsHolder.GetComponent<MenuSettingsController>().UpdateButtonSprite(SaveManager.Instance.settingsData.sound);
+                settingsHolder.GetComponent<MenuSettingsController>().Init(SaveManager.Instance.settingsData);
                 settingsHolder.SetActive(true);
 		break;
             case GameState.GAMEPLAY:

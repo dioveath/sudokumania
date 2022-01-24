@@ -47,13 +47,16 @@ public class FacebookAuthManager : MonoBehaviour
         TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
         var perms = new List<string>() { "public_profile", "email" };
         FB.LogInWithReadPermissions(perms, result => {
+	    if(result.Error != null) {
+                Debug.LogWarning(result.Error);
+                tcs.SetResult("Error");
+                return;
+            }
             tcs.SetResult(result.AccessToken.TokenString);
         });
 	return tcs.Task;
     }
 
-
-    // TODO: Create this method async to get accessToken
     public void LogIn(FacebookDelegate<ILoginResult> authCallback){        
         var perms = new List<string>() { "public_profile", "email" };
         FB.LogInWithReadPermissions(perms, authCallback);

@@ -53,6 +53,7 @@ public class MenuLeaderboardController : MonoBehaviour
             _entries.Add(entry);
         }
 
+        _entries.Reverse();
 
         UpdateLeaderboardUI();
     }

@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.Events;
 using Firebase.Auth;
-using Facebook.Unity;
 
 public class AuthManager : MonoBehaviour
 {
 
     public bool isSignedIn = false;
+    public bool isSigning = false;
     public UnityEvent<FirebaseUser> authStateChangedUEvent;
 
     private FirebaseAuth _auth;
@@ -34,9 +34,13 @@ public class AuthManager : MonoBehaviour
     }
 
     public async void LoginWithFacebook(){
+        isSigning = true;
         if(!isSignedIn) { 
             string accessToken = await FacebookAuthManager.Instance().LogInAsync();
-
+	    if(accessToken == "Error"){
+                Debug.LogWarning("Access Token Error");
+                return;
+            }
             Firebase.Auth.Credential credential = Firebase.Auth.FacebookAuthProvider.GetCredential(accessToken);
             await _auth.SignInWithCredentialAsync(credential).ContinueWith(task =>
             {
@@ -48,47 +52,28 @@ public class AuthManager : MonoBehaviour
         	    Debug.LogError("SignInWithCredentialAsync encoutered an error: " + task.Exception);
         	    return;
         	}
+                isSigning = false;
             });
-        }
-	else { 
+        } else {
+            isSigning = false;
             Debug.LogWarning("Already signed in!");
 	}
-    }
-
-    // Callback for FB Auth 
-    // For reference only (we're using async now)
-    void FacebookAuthCallback(ILoginResult result){
-        if(FB.IsLoggedIn){
-            AccessToken accessToken = result.AccessToken;
-
-            Firebase.Auth.Credential credential = Firebase.Auth.FacebookAuthProvider.GetCredential(accessToken.TokenString);
-            _auth.SignInWithCredentialAsync(credential).ContinueWith(task => { 
-            if(task.IsCanceled){
-                Debug.LogError("SignInWithCredentialAsync was canceled!");
-                return;
-            }
-
-            if(task.IsFaulted){
-                Debug.LogError("SignInWithCredentialAsync encoutered an error: " + task.Exception);
-                return;
-            }
-        });
-
-        } else { 
-            Debug.Log("User cancelled login!");
-        }
-
     }
 
     void AuthStateChanged(object sender, System.EventArgs eventArgs){
         isSignedIn = _auth.CurrentUser != null;
         authStateChangedUEvent?.Invoke(_auth.CurrentUser);
 
-        // if(isSignedIn){ 
-        //     Debug.Log(_auth.CurrentUser.Email);
-        //     Debug.Log(_auth.CurrentUser.DisplayName);
-        //     Debug.Log(_auth.CurrentUser.IsEmailVerified);		
-        // }
+	if(isSignedIn)
+	    SaveManager.Instance.settingsData.isLinked = true;
+	else
+	    SaveManager.Instance.settingsData.isLinked = false;	    
+
+        if(isSignedIn){ 
+            Debug.Log(_auth.CurrentUser.Email);
+            Debug.Log(_auth.CurrentUser.DisplayName);
+            Debug.Log(_auth.CurrentUser.IsEmailVerified);		
+        }
     }
 
     public void Logout(){

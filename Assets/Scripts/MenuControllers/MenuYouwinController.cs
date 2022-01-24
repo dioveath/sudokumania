@@ -22,9 +22,11 @@ public class MenuYouwinController : MonoBehaviour
             playerPoint = points - (int)(points * (1 - percent));
         }
         pointsText.text = $"{minutes.ToString("00")} : {seconds.ToString("00")} \n{playerPoint}";	
-
 	Player.Instance.playerData.points += playerPoint;
         Player.Instance.SaveCurrentPlayerData();
+
+	
+
     }
 
     public void OnMainMenuPressed(){
