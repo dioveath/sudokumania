@@ -19,12 +19,11 @@ public class MenuLeaderboardController : MonoBehaviour
 
     public async void LoadLeaderboardEntry(){
         loadingImage.gameObject.SetActive(true);
+	_entryTexts.ForEach((t) => t.gameObject.SetActive(false));
         UpdateLeaderboardUI(await LeaderboardManager.Instance.GetLeaderboardEntries());
     }
 
     public void UpdateLeaderboardUI(List<LeaderboardEntry> entries){
-	_entryTexts.ForEach((t) => t.gameObject.SetActive(false));
-
         for (int i = 0; i < entries.Count; i++){
 	    if(i >= _entryTexts.Count) {
                 Text txtObj = Instantiate(highscoreTextPrefab, Vector3.zero, Quaternion.identity);

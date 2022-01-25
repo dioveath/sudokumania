@@ -4,8 +4,8 @@ using UnityEngine;
 public class SudokuLayoutGenerator : MonoBehaviour
 {
     public GameObject numberBlockPrefab;
-    public float blockSize = 0.6f;
-    public float blockGap = 0.2f;
+    public float blockSize = 0.59f;
+    public float blockGap = 0.13f;
     public Vector2 offsetPosition;
 
     public static SudokuLayoutGenerator _instance;

@@ -130,15 +130,19 @@ public class GameManager : MonoBehaviour
 		    Application.Quit();
 		    break;
 		case GameState.LEVEL_SELECT:
-		    SwitchState(GameState.MAINMENU);
+                    AudioManager.Instance().PlayAudio("click_heavy");
+                    SwitchState(GameState.MAINMENU);
 		    break;
 		case GameState.LEADERBOARD:
+                    AudioManager.Instance().PlayAudio("click_heavy");		    
 		    SwitchState(GameState.MAINMENU);
 		    break;
 		case GameState.SETTINGS:
+                    AudioManager.Instance().PlayAudio("click_heavy");
 		    SwitchState(GameState.MAINMENU);		    
                     break;
 		case GameState.INFO:
+                    AudioManager.Instance().PlayAudio("click_heavy");		    
                     SwitchState(GameState.MAINMENU);
                     break;
             }
@@ -155,13 +159,14 @@ public class GameManager : MonoBehaviour
             await SudokuUtils.GetAllLevels(null);
         }
 
-        loadingUI.SetActive(false);
-
         int levelsCount = SudokuUtils.allSudokuLevels.Count;
         Button[] currentButtons = levelButtonHolder.GetComponentsInChildren<Button>();
         int currentTotalButtons = currentButtons.Length;
 
-        Debug.Log(currentButtons.Length);
+        for (int i = 0; i < currentButtons.Length; i++)
+	    currentButtons[i].gameObject.SetActive(false);
+
+        loadingUI.SetActive(false);
 
         for (int i = 0; i < levelsCount; i++){
             GameObject buttonObj;
@@ -175,7 +180,7 @@ public class GameManager : MonoBehaviour
             rect.SetParent(levelButtonHolder.transform);
             rect.anchorMin = new Vector2(0.5f, 1f);
             rect.anchorMax = new Vector2(0.5f, 1f);
-	    rect.anchoredPosition3D = new Vector3(0, -900 -(i * 400), 0);
+	    rect.anchoredPosition3D = new Vector3(0, -1400 -(i * 150), 0);
 	    rect.localScale = Vector3.one;
 
             int levelIndex = i+1;
@@ -187,6 +192,7 @@ public class GameManager : MonoBehaviour
             });
         }
 
+
 	if(currentTotalButtons > levelsCount){
 	    Debug.Log("Destroying..!");
             for (int i = levelsCount; i < currentTotalButtons; i++){
@@ -195,6 +201,9 @@ public class GameManager : MonoBehaviour
                 DestroyImmediate(currentButtons[i]);
             }
 	}
+
+	for (int i = 0; i < currentButtons.Length; i++)
+	    currentButtons[i].gameObject.SetActive(true);		
     }
 
     public void OnFirebaseInitialize(){
