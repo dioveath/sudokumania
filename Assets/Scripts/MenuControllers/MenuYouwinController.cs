@@ -25,7 +25,12 @@ public class MenuYouwinController : MonoBehaviour
 	Player.Instance.playerData.points += playerPoint;
         Player.Instance.SaveCurrentPlayerData();
 
-	
+	if(AuthManager.Instance().isSignedIn){
+            string username = AuthManager.Instance().username;
+            LeaderboardManager.Instance.EnterNewLeaderboardEntry(username, Player.Instance.playerData.points);
+        } else {
+            Debug.Log("Only Saved locally!");
+        }
 
     }
 

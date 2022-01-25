@@ -8,6 +8,7 @@ public class AuthManager : MonoBehaviour
     public bool isSignedIn = false;
     public bool isSigning = false;
     public UnityEvent<FirebaseUser> authStateChangedUEvent;
+    public string username;
 
     private FirebaseAuth _auth;
 
@@ -64,6 +65,8 @@ public class AuthManager : MonoBehaviour
         isSignedIn = _auth.CurrentUser != null;
         authStateChangedUEvent?.Invoke(_auth.CurrentUser);
 
+	
+
 	if(isSignedIn)
 	    SaveManager.Instance.settingsData.isLinked = true;
 	else
@@ -72,7 +75,10 @@ public class AuthManager : MonoBehaviour
         if(isSignedIn){ 
             Debug.Log(_auth.CurrentUser.Email);
             Debug.Log(_auth.CurrentUser.DisplayName);
-            Debug.Log(_auth.CurrentUser.IsEmailVerified);		
+            Debug.Log(_auth.CurrentUser.IsEmailVerified);
+            username = _auth.CurrentUser.DisplayName;
+        } else {
+            username = "";
         }
     }
 
