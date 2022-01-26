@@ -349,7 +349,7 @@ public class SudokuUtils
 }
 
 [Serializable]
-public struct SudokuLevel {
+public class SudokuLevel {
     public string id;
     public int[,] sudokuArray;
     public int[,] inputSudokuArray;

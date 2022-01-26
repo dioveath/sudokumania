@@ -5,7 +5,9 @@ public class MenuGameplayController : MonoBehaviour
     public GameObject pauseMenuHolder;
 
     public void OnMenuPressed(){
-        Player.Instance.playerData.playingLevel = SudokuManager.Instance().GetCurrentSudokuLevel();
+        SudokuLevel currentLevel = SudokuManager.Instance().GetCurrentSudokuLevel();
+        Player.Instance.AddPlayingSudokuLevel(currentLevel);
+        Player.Instance.playerData.lastPlayedId = currentLevel.id;
         Player.Instance.SaveCurrentPlayerData();
 
         pauseMenuHolder.SetActive(true);

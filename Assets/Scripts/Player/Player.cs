@@ -38,4 +38,28 @@ public class Player : MonoBehaviour
 	SaveManager.Instance.SavePlayerData(playerData);
     }
 
+    public void AddPlayingSudokuLevel(SudokuLevel level){
+        bool replaced = false;
+        for (int i = 0; i < playerData.playingLevels.Count; i++){
+	    if(playerData.playingLevels[i].id == level.id) {
+                playerData.playingLevels[i] = level;
+                replaced = true;
+		Debug.Log("Replaced level to playingLevels");		
+                break;
+            }
+	}
+	if(!replaced) {
+            Debug.Log("Added level to playingLevels");
+            playerData.playingLevels.Add(level);
+        }
+    }
+
+    public SudokuLevel GetPlayingSudokuLevel(string id){
+        for (int i = 0; i < playerData.playingLevels.Count; i++){
+	    if(id == playerData.playingLevels[i].id) return playerData.playingLevels[i];
+        }
+        Debug.Log("Not found sudoku level with id: " + id);
+        return null;
+    }
+
 }

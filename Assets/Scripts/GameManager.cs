@@ -190,7 +190,7 @@ public class GameManager : MonoBehaviour
             int levelIndex = i;
 
             buttonObj.GetComponentInChildren<Text>().text = "Level " + (levelIndex+1);
-	    if(Player.Instance.playerData.playingLevel.id == SudokuUtils.allSudokuLevels[i].id)
+	    if(Player.Instance.playerData.lastPlayedId == SudokuUtils.allSudokuLevels[levelIndex].id)
                 buttonObj.GetComponent<Image>().color = Color.green;
 	    else
                 buttonObj.GetComponent<Image>().color = Color.white;		

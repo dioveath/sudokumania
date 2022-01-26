@@ -1,15 +1,19 @@
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class PlayerData {
 
-    public SudokuLevel playingLevel;
+    public List<SudokuLevel> playingLevels;
     public int points = 0;
+    public string lastPlayedId;
 
-    public PlayerData() { }
-
-    public PlayerData(SudokuLevel sudokuLevel){
-        this.playingLevel = sudokuLevel;
+    public PlayerData() {
+        this.playingLevels = new List<SudokuLevel>();
     }
+    
+    // public PlayerData(SudokuLevel sudokuLevel){
+    //     this.playingLevel = sudokuLevel;
+    // }
 
 }

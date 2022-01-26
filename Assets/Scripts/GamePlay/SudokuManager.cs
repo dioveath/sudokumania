@@ -30,8 +30,9 @@ public class SudokuManager : MonoBehaviour
         InputManager.Instance().GenerateInputBlocks();
         InputManager.Instance().inputEvent.AddListener(OnInput);
 
-	if(Player.Instance.playerData.playingLevel.id == sudokuLevel.id){
-	    LoadSudokuLevel(Player.Instance.playerData.playingLevel);
+        SudokuLevel loadedLevel = Player.Instance.GetPlayingSudokuLevel(sudokuLevel.id);
+        if(loadedLevel != null){
+		LoadSudokuLevel(loadedLevel);
 	} else {
 	    LoadSudokuLevel(sudokuLevel);	    
 	}

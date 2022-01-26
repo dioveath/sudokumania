@@ -64,6 +64,23 @@ public class SaveManager : MonoBehaviour {
         return sd;
     }
 
+    public void DeleteAll(){
+	try {
+	    foreach(var directory in Directory.GetDirectories(Application.persistentDataPath)) {
+		DirectoryInfo dInfo = new DirectoryInfo(directory);
+		dInfo.Delete(true);
+	    }
+	    foreach(var file in Directory.GetFiles(Application.persistentDataPath)) {
+                FileInfo fInfo = new FileInfo(file);
+                fInfo.Delete();
+            }
+	    Debug.Log("Deleted Everything!");	    
+	} catch (Exception e){
+            Debug.LogError("Error: " + e.Message);
+        }
+
+    }
+
 }
 
 
