@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
 	}
 	return _instance;
     }
-
+    
     void Start() {
         FirebaseManager.Instance().OnFirebaseInitialized.AddListener(OnFirebaseInitialize);
 
@@ -159,6 +159,10 @@ public class GameManager : MonoBehaviour
             await SudokuUtils.GetAllLevels(null);
         }
 
+        if(SudokuUtils.allSudokuLevels == null){
+            Debug.LogWarning("NULL SudokuUtils.allSudokuLevels");
+        }
+
         int levelsCount = SudokuUtils.allSudokuLevels.Count;
         Button[] currentButtons = levelButtonHolder.GetComponentsInChildren<Button>();
         int currentTotalButtons = currentButtons.Length;
@@ -183,11 +187,17 @@ public class GameManager : MonoBehaviour
 	    rect.anchoredPosition3D = new Vector3(0, -1400 -(i * 150), 0);
 	    rect.localScale = Vector3.one;
 
-            int levelIndex = i+1;
-            buttonObj.GetComponentInChildren<Text>().text = "Level " + levelIndex;
+            int levelIndex = i;
+
+            buttonObj.GetComponentInChildren<Text>().text = "Level " + (levelIndex+1);
+	    if(Player.Instance.playerData.playingLevel.id == SudokuUtils.allSudokuLevels[i].id)
+                buttonObj.GetComponent<Image>().color = Color.green;
+	    else
+                buttonObj.GetComponent<Image>().color = Color.white;		
+
             buttonObj.GetComponent<Button>().onClick.AddListener(() => {
                 SwitchState(GameState.GAMEPLAY);
-		SudokuManager.Instance().Init(levelIndex);
+		SudokuManager.Instance().Init(SudokuUtils.allSudokuLevels[levelIndex]);
                 AudioManager.Instance().PlayAudio("click_wooden1");
             });
         }

@@ -9,7 +9,6 @@ public class SudokuManager : MonoBehaviour
     private int _activeX;
 
     private SudokuLevel _currentLevel;
-    private int _currentLevelIndex;
     private float _timeElapsed = 0.0f;
     private bool _levelRunning = false;
 
@@ -26,18 +25,16 @@ public class SudokuManager : MonoBehaviour
         return _instance;
     }
 
-    public void Init(int level = 1){
+    public void Init(SudokuLevel sudokuLevel){
         _currentLayout = SudokuLayoutGenerator.Instance().GenerateSudokuLayout();
         InputManager.Instance().GenerateInputBlocks();
         InputManager.Instance().inputEvent.AddListener(OnInput);
 
-        Debug.Log("Level " + level + " Loading...");
-        if(SudokuUtils.allSudokuLevels != null && SudokuUtils.allSudokuLevels.Count >= level) {
-            LoadSudokuLevel(SudokuUtils.allSudokuLevels[level - 1]);
-            _currentLevelIndex = level;
-        } else { 
-            Debug.LogWarning("No Sudoku Level - " + level);
-        }
+	if(Player.Instance.playerData.playingLevel.id == sudokuLevel.id){
+	    LoadSudokuLevel(Player.Instance.playerData.playingLevel);
+	} else {
+	    LoadSudokuLevel(sudokuLevel);	    
+	}
 
         AdsManager.Instance.RequestInterstitial();
 
@@ -93,7 +90,7 @@ public class SudokuManager : MonoBehaviour
     }
 
     public void ReloadLevel(){
-        Init(_currentLevelIndex);
+        Init(_currentLevel);
 
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 9; j++){
