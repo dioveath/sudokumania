@@ -10,6 +10,7 @@ public class PlayerData {
 
     public PlayerData() {
         this.playingLevels = new List<SudokuLevel>();
+        this.lastPlayedId = "";
     }
     
     // public PlayerData(SudokuLevel sudokuLevel){

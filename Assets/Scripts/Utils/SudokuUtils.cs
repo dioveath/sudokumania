@@ -355,6 +355,7 @@ public class SudokuLevel {
     public int[,] inputSudokuArray;
     public int[,] validSolution;
     public int points;
+    public bool isCompleted;
 
     public SudokuLevel(string __id, int[,] __sudokuArray, int[,] __inputSudokuArray, int[,] __validSolution, int points){
         this.id = __id;
@@ -362,6 +363,7 @@ public class SudokuLevel {
         this.inputSudokuArray = __inputSudokuArray;
         this.validSolution = __validSolution;
         this.points = points;
+        this.isCompleted = false;
     }
 
     public SudokuLevel Copy(){
@@ -374,5 +376,9 @@ public class SudokuLevel {
         Array.Copy(validSolution, newValidSolution, newSudokuArray.Length);	
 
         return new SudokuLevel(id, newSudokuArray, newInputSudokuArray, newValidSolution, points);
+    }
+
+    public void Reset(){
+        Array.Copy(sudokuArray, inputSudokuArray, sudokuArray.Length);
     }
 }

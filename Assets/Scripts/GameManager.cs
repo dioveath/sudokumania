@@ -153,23 +153,21 @@ public class GameManager : MonoBehaviour
     async void HandleInitializeLevels(){
         loadingUI.SetActive(true);
 
+        Button[] currentButtons = levelButtonHolder.GetComponentsInChildren<Button>();
+        int currentTotalButtons = currentButtons.Length;	
+        for (int i = 0; i < currentTotalButtons; i++)
+	    currentButtons[i].gameObject.SetActive(false);
+	
 	if(FirebaseManager.Instance().isInitialized) {
 	    await SudokuUtils.GetAllLevels(FirebaseDatabase.DefaultInstance);
 	} else {
             await SudokuUtils.GetAllLevels(null);
         }
-
         if(SudokuUtils.allSudokuLevels == null){
             Debug.LogWarning("NULL SudokuUtils.allSudokuLevels");
         }
 
         int levelsCount = SudokuUtils.allSudokuLevels.Count;
-        Button[] currentButtons = levelButtonHolder.GetComponentsInChildren<Button>();
-        int currentTotalButtons = currentButtons.Length;
-
-        for (int i = 0; i < currentButtons.Length; i++)
-	    currentButtons[i].gameObject.SetActive(false);
-
         loadingUI.SetActive(false);
 
         for (int i = 0; i < levelsCount; i++){

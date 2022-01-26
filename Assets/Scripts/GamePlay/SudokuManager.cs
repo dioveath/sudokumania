@@ -32,7 +32,7 @@ public class SudokuManager : MonoBehaviour
 
         SudokuLevel loadedLevel = Player.Instance.GetPlayingSudokuLevel(sudokuLevel.id);
         if(loadedLevel != null){
-		LoadSudokuLevel(loadedLevel);
+	    LoadSudokuLevel(loadedLevel);
 	} else {
 	    LoadSudokuLevel(sudokuLevel);	    
 	}
