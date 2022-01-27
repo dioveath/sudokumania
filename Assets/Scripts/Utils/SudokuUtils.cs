@@ -356,6 +356,7 @@ public class SudokuLevel {
     public int[,] validSolution;
     public int points;
     public bool isCompleted;
+    public float lastElapsedTime;
 
     public SudokuLevel(string __id, int[,] __sudokuArray, int[,] __inputSudokuArray, int[,] __validSolution, int points){
         this.id = __id;
@@ -364,6 +365,7 @@ public class SudokuLevel {
         this.validSolution = __validSolution;
         this.points = points;
         this.isCompleted = false;
+        this.lastElapsedTime = 0.0f;
     }
 
     public SudokuLevel Copy(){

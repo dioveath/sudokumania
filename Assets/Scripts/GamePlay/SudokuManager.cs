@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class SudokuManager : MonoBehaviour
 {
-
     private NumberBlock[,] _currentLayout;
     private NumberBlock _activeNumberBlock;
     private int _activeY;
@@ -31,15 +30,16 @@ public class SudokuManager : MonoBehaviour
         InputManager.Instance().inputEvent.AddListener(OnInput);
 
         SudokuLevel loadedLevel = Player.Instance.GetPlayingSudokuLevel(sudokuLevel.id);
-        if(loadedLevel != null){
+        if(loadedLevel != null){ // if there is previous save
 	    LoadSudokuLevel(loadedLevel);
-	} else {
+            _timeElapsed = loadedLevel.lastElapsedTime;
+        } else {
 	    LoadSudokuLevel(sudokuLevel);	    
+	    _timeElapsed = 0.0f;
 	}
 
         AdsManager.Instance.RequestInterstitial();
 
-        _timeElapsed = 0.0f;
         _levelRunning = true;
         SetInputActive(true);
     }

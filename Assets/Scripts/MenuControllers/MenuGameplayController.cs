@@ -6,6 +6,7 @@ public class MenuGameplayController : MonoBehaviour
 
     public void OnMenuPressed(){
         SudokuLevel currentLevel = SudokuManager.Instance().GetCurrentSudokuLevel();
+        currentLevel.lastElapsedTime = SudokuManager.Instance().GetTimeElapsed();
         Player.Instance.AddPlayingSudokuLevel(currentLevel);
         Player.Instance.playerData.lastPlayedId = currentLevel.id;
         Player.Instance.SaveCurrentPlayerData();
