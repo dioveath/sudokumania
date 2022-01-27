@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public GameObject youwinHolder;
     public GameObject gameplayHolder;
     public GameObject infoHolder;
+    public GameObject sudokuLinesHolder;
 
     // LevelSelect Menu
     [Header("LevelSelect Objects")]
@@ -61,6 +62,7 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.MAINMENU:
                 mainMenuHolder.SetActive(false);
+                sudokuLinesHolder.SetActive(false);
                 break;
 	    case GameState.LEVEL_SELECT:
                 levelSelectHolder.SetActive(false);
@@ -69,7 +71,8 @@ public class GameManager : MonoBehaviour
                 leaderboardHolder.SetActive(false);
                 break;
             case GameState.GAMEPLAY:
-		SudokuManager.Instance().Finish();
+                sudokuLinesHolder.SetActive(false);
+                SudokuManager.Instance().Finish();
                 gameplayHolder.SetActive(false);
                 break;
             case GameState.YOUWIN:
@@ -91,7 +94,11 @@ public class GameManager : MonoBehaviour
                 loginHolder.SetActive(true);
                 break;
             case GameState.MAINMENU:
-                // welcomeText.text = "Welcome, Mr. " + GameObject.FindWithTag("Player").GetComponent<Player>()._playerData.fullName;
+		if(AuthManager.Instance().isSignedIn)
+                    welcomeText.text = "Welcome, Mr. " + AuthManager.Instance().username;
+                else
+                    welcomeText.text = "Welcome, fellow Traveller!";
+                sudokuLinesHolder.SetActive(true);
                 mainMenuHolder.GetComponent<MenuMainController>().SetSudokuPoints();
                 mainMenuHolder.SetActive(true);
                 break;
@@ -108,7 +115,7 @@ public class GameManager : MonoBehaviour
                 settingsHolder.SetActive(true);
 		break;
             case GameState.GAMEPLAY:
-                // SudokuManager.Instance().Init();
+                sudokuLinesHolder.SetActive(true);
                 gameplayHolder.SetActive(true);		
                 break;
 	    case GameState.YOUWIN:
@@ -199,7 +206,6 @@ public class GameManager : MonoBehaviour
                 AudioManager.Instance().PlayAudio("click_wooden1");
             });
         }
-
 
 	if(currentTotalButtons > levelsCount){
 	    Debug.Log("Destroying..!");
