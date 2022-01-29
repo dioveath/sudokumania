@@ -10,6 +10,12 @@ public class NumberBlock : MonoBehaviour
     private bool _isValid = false;
     private int _currentValue = 0;
 
+    [Header("Number Block Colors")]
+    public Color activeColor;
+    public Color validColor;
+    public Color invalidColor;
+    public Color disabledColor;
+
     public Sprite[] sprites;
 
     void Awake()
@@ -25,21 +31,21 @@ public class NumberBlock : MonoBehaviour
         {
             if (_isActive)
             {
-                _renderer.color = Color.blue;
+                _renderer.color = activeColor;
             } else {
 		if(_isValid)
 		{
-		    _renderer.color = Color.green;
-		} else {
-		    _renderer.color = Color.red;
-		}
+                    _renderer.color = validColor;
+                } else {
+                    _renderer.color = invalidColor;
+                }
 
 		// If No Input
 		if(_currentValue == 0)
                     _renderer.color = Color.white;
             } 
         } else {
-            _renderer.color = Color.gray;
+            _renderer.color = disabledColor;
         }
     }
 

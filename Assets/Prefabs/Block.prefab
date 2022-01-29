@@ -44,7 +44,6 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -123,6 +122,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2976deba89abb04b8b6c9457f976996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeColor: {r: 0.09411765, g: 0.24118896, b: 0.7529412, a: 0.91764706}
+  validColor: {r: 0.1867271, g: 0.8773585, b: 0.185404, a: 0.9254902}
+  invalidColor: {r: 0.6509434, g: 0.13755782, b: 0.13755782, a: 0.8862745}
+  disabledColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 0.88235295}
   sprites:
   - {fileID: 21300000, guid: cb365d97acca667479fa4a14ced81f9b, type: 3}
   - {fileID: 21300000, guid: 34a051abf0b395b4b8eda33a69e876c7, type: 3}

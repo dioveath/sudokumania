@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -23,6 +22,7 @@ public class InputBlock : MonoBehaviour
 
     void Start(){
 	_renderer.sprite = sprites[_inputValue];
+        transform.DOScale(new Vector3(1.02f, 1.02f, 1.02f), 1f).SetLoops(-1, LoopType.Yoyo);
     }
 
     void Update()
