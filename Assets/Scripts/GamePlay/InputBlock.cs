@@ -22,7 +22,7 @@ public class InputBlock : MonoBehaviour
 
     void Start(){
 	_renderer.sprite = sprites[_inputValue];
-        transform.DOScale(new Vector3(1.02f, 1.02f, 1.02f), 1f).SetLoops(-1, LoopType.Yoyo);
+        // transform.DOScale(new Vector3(1.001f, 1.001f, 1.001f), 2f).SetLoops(-1, LoopType.Yoyo).SetDelay(Random.Range(0f, 1f));
     }
 
     void Update()

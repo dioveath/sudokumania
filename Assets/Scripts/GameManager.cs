@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject gameplayHolder;
     public GameObject infoHolder;
     public GameObject sudokuLinesHolder;
+    public GameObject fbLinkedHolder;
 
     // LevelSelect Menu
     [Header("LevelSelect Objects")]
@@ -62,7 +63,7 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.MAINMENU:
                 mainMenuHolder.SetActive(false);
-                sudokuLinesHolder.SetActive(false);
+                // sudokuLinesHolder.SetActive(false);
                 break;
 	    case GameState.LEVEL_SELECT:
                 levelSelectHolder.SetActive(false);
@@ -94,11 +95,16 @@ public class GameManager : MonoBehaviour
                 loginHolder.SetActive(true);
                 break;
             case GameState.MAINMENU:
-		if(AuthManager.Instance().isSignedIn)
+		if(AuthManager.Instance().isSignedIn) {
                     welcomeText.text = "Welcome, Mr. " + AuthManager.Instance().username;
-                else
+                    fbLinkedHolder.SetActive(true);
+                }
+                else {
                     welcomeText.text = "Welcome, fellow Traveller!";
-                sudokuLinesHolder.SetActive(true);
+                    fbLinkedHolder.SetActive(false);		    
+		}
+
+                // sudokuLinesHolder.SetActive(true);
                 mainMenuHolder.GetComponent<MenuMainController>().SetSudokuPoints();
                 mainMenuHolder.SetActive(true);
                 break;

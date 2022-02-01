@@ -19,7 +19,8 @@ public class MenuLeaderboardController : MonoBehaviour
 
     public async void LoadLeaderboardEntry(){
         loadingImage.gameObject.SetActive(true);
-	_entryTexts.ForEach((t) => t.gameObject.SetActive(false));
+        _entryTexts = new List<Text>(GetComponentsInChildren<Text>());
+        _entryTexts.ForEach((t) => t.gameObject.SetActive(false));
         UpdateLeaderboardUI(await LeaderboardManager.Instance.GetLeaderboardEntries());
     }
 
