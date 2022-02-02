@@ -97,13 +97,12 @@ public class GameManager : MonoBehaviour
             case GameState.MAINMENU:
 		if(AuthManager.Instance().isSignedIn) {
                     welcomeText.text = "Welcome, Mr. " + AuthManager.Instance().username;
-                    fbLinkedHolder.SetActive(true);
+                    fbLinkedHolder.GetComponentInChildren<Text>().text = "LINKED";		    
                 }
                 else {
                     welcomeText.text = "Welcome, fellow Traveller!";
-                    fbLinkedHolder.SetActive(false);		    
-		}
-
+                    fbLinkedHolder.GetComponentInChildren<Text>().text = "NOT LINKED";
+                }		
                 // sudokuLinesHolder.SetActive(true);
                 mainMenuHolder.GetComponent<MenuMainController>().SetSudokuPoints();
                 mainMenuHolder.SetActive(true);
@@ -227,22 +226,25 @@ public class GameManager : MonoBehaviour
     }
 
     public void OnFirebaseInitialize(){
-        // AuthManager.Instance().authStateChangedUEvent.AddListener(OnAuthStateChange);	
+        AuthManager.Instance().authStateChangedUEvent.AddListener(OnAuthStateChange);
     }
     
     public void OnAuthStateChange(FirebaseUser user){
-	// NOTE: We're not using any authentication system for initial release
-        // if(user != null){
-        //     SwitchState(GameState.MAINMENU);
-	//     Debug.Log("Game logged in with: " + user.DisplayName);
-        // } else {
-        //     SwitchState(GameState.LOGIN);
-        // }	
+	switch(_currentState) {
+	    case GameState.MAINMENU:
+		if(AuthManager.Instance().isSignedIn) {
+                    welcomeText.text = "Welcome, Mr. " + AuthManager.Instance().username;
+                    fbLinkedHolder.GetComponentInChildren<Text>().text = "LINKED";		    
+                }
+                else {
+                    welcomeText.text = "Welcome, fellow Traveller!";
+                    fbLinkedHolder.GetComponentInChildren<Text>().text = "NOT LINKED";
+                }		
+                break;
+        }
     }
-
     
 }
-
 
 
 

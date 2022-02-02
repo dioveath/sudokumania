@@ -13,8 +13,8 @@ public class MenuMainController : MonoBehaviour
     public void SetSudokuPoints(){
 	int points = Player.Instance.playerData.points;
 	sudokuPointsText.text = $"Your SP: {points}";
-	Debug.Log(Player.Instance.playerData.points);
-	Debug.Log(points);		    
+	// Debug.Log(Player.Instance.playerData.points);
+	// Debug.Log(points);		    
     }
 
     public void OnPlayButtonPressed(){

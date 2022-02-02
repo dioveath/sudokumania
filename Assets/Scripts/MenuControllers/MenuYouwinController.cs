@@ -5,7 +5,7 @@ public class MenuYouwinController : MonoBehaviour
 {
     public Text pointsText;
 
-    public void SetCompletedStats(){
+    public async void SetCompletedStats(){
         SudokuLevel wonLevel = SudokuManager.Instance().GetCurrentSudokuLevel();
         SudokuLevel playerSavedLevel = Player.Instance.GetPlayingSudokuLevel(wonLevel.id);
 
@@ -37,15 +37,24 @@ public class MenuYouwinController : MonoBehaviour
         wonLevel.Reset();
         Player.Instance.playerData.lastPlayedId = "";
         Player.Instance.AddPlayingSudokuLevel(wonLevel);
-        Player.Instance.SaveCurrentPlayerData();
 
 	if(AuthManager.Instance().isSignedIn){
             string username = AuthManager.Instance().username;
-            LeaderboardManager.Instance.EnterNewLeaderboardEntry(username, Player.Instance.playerData.points);
+
+            Player.Instance.playerData.profileLink = await FacebookAuthManager.Instance().GetProfileImageLink();
+
+            LeaderboardManager.Instance.EnterNewLeaderboardEntry(
+		username,
+		Player.Instance.playerData.points,
+		"null"
+	    );
+
+            Debug.Log("Saved online!");
         } else {
             Debug.Log("Only Saved locally!");
         }
 
+	Player.Instance.SaveCurrentPlayerData();
     }
 
     public void OnMainMenuPressed(){

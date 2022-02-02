@@ -41,15 +41,20 @@ public class FacebookAuthManager : MonoBehaviour
         }
     }
 
-
     // Gets FB Token by Logging
     public Task<string> LogInAsync () {
         TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
         var perms = new List<string>() { "public_profile", "email" };
         FB.LogInWithReadPermissions(perms, result => {
 	    if(result.Error != null) {
-                Debug.LogWarning(result.Error);
+                // Debug.LogWarning(result.Error);
                 tcs.SetResult("Error");
+                return;
+            }
+	    if(result.Cancelled) {
+                // Debug.LogWarning("Cancelled");
+                // tcs.SetCanceled();
+                tcs.SetResult("Cancelled");
                 return;
             }
             tcs.SetResult(result.AccessToken.TokenString);
@@ -58,8 +63,30 @@ public class FacebookAuthManager : MonoBehaviour
     }
 
     public void LogIn(FacebookDelegate<ILoginResult> authCallback){        
-        var perms = new List<string>() { "public_profile", "email" };
+        var perms = new List<string>() { "public_profile", "email",  };
         FB.LogInWithReadPermissions(perms, authCallback);
+    }
+
+    public Task<string> GetProfileImageLink() {
+        TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
+        if(FB.IsLoggedIn){
+            FB.API("/me/picture", HttpMethod.GET, (graphResult) =>
+            {
+	 	if(graphResult.Error != null){
+                    Debug.LogError(graphResult.Error);
+                    tcs.SetResult(null);
+                    return;
+                }
+
+                // JSONObject json = new JSONObject(graphResult.RawResult);
+                // tcs.SetResult(graphResult.ResultDictionary["url"].ToString());
+                tcs.SetResult("Some Result");
+            });
+        } else {
+            Debug.Log("!FB.IsLoggedIn");
+            tcs.SetResult("NOT LOGGED IN");
+        }
+        return tcs.Task;
     }
 
     private void AuthCallback(ILoginResult result){

@@ -11,7 +11,6 @@ public class AuthManager : MonoBehaviour
     public string username;
 
     private FirebaseAuth _auth;
-
     private static AuthManager _instance;
 
 
@@ -40,11 +39,30 @@ public class AuthManager : MonoBehaviour
             string accessToken = await FacebookAuthManager.Instance().LogInAsync();
 	    if(accessToken == "Error"){
                 Debug.LogWarning("Access Token Error");
+                isSigning = false;
                 return;
             }
+
+	    if(accessToken == "Cancelled") {
+                Debug.LogWarning("Cancelled by User");
+                isSigning = false;		
+                return;
+            }
+
             Firebase.Auth.Credential credential = Firebase.Auth.FacebookAuthProvider.GetCredential(accessToken);
+
+            // string profileLink = await FacebookAuthManager.Instance().GetProfileImageLink();
+	    // if(profileLink == null){
+            //     Debug.LogWarning("Couldn't retrieve profile URL");
+            //     return;
+            // }
+
+            // Player.Instance.playerData.profileLink = profileLink;
+            // Player.Instance.SaveCurrentPlayerData();
+
             await _auth.SignInWithCredentialAsync(credential).ContinueWith(task =>
             {
+		isSigning = false;		
         	if(task.IsCanceled) { 
         	    Debug.LogError("SignInWithCredentialAsync was canceled!");
         	    return;
@@ -53,8 +71,8 @@ public class AuthManager : MonoBehaviour
         	    Debug.LogError("SignInWithCredentialAsync encoutered an error: " + task.Exception);
         	    return;
         	}
-                isSigning = false;
             });
+
         } else {
             isSigning = false;
             Debug.LogWarning("Already signed in!");
@@ -63,23 +81,24 @@ public class AuthManager : MonoBehaviour
 
     void AuthStateChanged(object sender, System.EventArgs eventArgs){
         isSignedIn = _auth.CurrentUser != null;
-        authStateChangedUEvent?.Invoke(_auth.CurrentUser);
-
-	
 
 	if(isSignedIn)
 	    SaveManager.Instance.settingsData.isLinked = true;
 	else
 	    SaveManager.Instance.settingsData.isLinked = false;	    
 
-        if(isSignedIn){ 
-            Debug.Log(_auth.CurrentUser.Email);
+        if(isSignedIn){
+            Debug.Log("------SIGNED IN------");
             Debug.Log(_auth.CurrentUser.DisplayName);
+            Debug.Log(_auth.CurrentUser.Email);
             Debug.Log(_auth.CurrentUser.IsEmailVerified);
             username = _auth.CurrentUser.DisplayName;
+            Debug.Log("------SIGNED IN------");	    
         } else {
             username = "";
         }
+
+        authStateChangedUEvent?.Invoke(_auth.CurrentUser);	
     }
 
     public void Logout(){
