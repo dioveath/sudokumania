@@ -70,7 +70,7 @@ public class FacebookAuthManager : MonoBehaviour
     public Task<string> GetProfileImageLink() {
         TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
         if(FB.IsLoggedIn){
-            FB.API("/me/picture", HttpMethod.GET, (graphResult) =>
+            FB.API("/me?fields=picture", HttpMethod.GET, (graphResult) =>
             {
 	 	if(graphResult.Error != null){
                     Debug.LogError(graphResult.Error);
@@ -78,9 +78,20 @@ public class FacebookAuthManager : MonoBehaviour
                     return;
                 }
 
-                // JSONObject json = new JSONObject(graphResult.RawResult);
-                // tcs.SetResult(graphResult.ResultDictionary["url"].ToString());
-                tcs.SetResult("Some Result");
+                Dictionary<string, object> picDict;
+                if(graphResult.ResultDictionary.TryGetValue("picture", out object value)) {
+			picDict = value as Dictionary<string, object>;
+			if(picDict.TryGetValue("data", out object dataObj)){
+			    var dataDict = dataObj as Dictionary<string, object>;
+			    if(dataDict.TryGetValue("url", out object urlObj)){
+                            tcs.SetResult(urlObj as string);
+                            return;
+                        }
+			}
+                } 
+
+		tcs.SetResult(null);
+
             });
         } else {
             Debug.Log("!FB.IsLoggedIn");

@@ -1,5 +1,8 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class MenuLeaderboardController : MonoBehaviour
@@ -42,9 +45,9 @@ public class MenuLeaderboardController : MonoBehaviour
 
 
             entryUI.rankText.text = (i + 1) + ". ";
-            // ui.profileImage.sprite
             entryUI.usernameText.text = entry.username;
             entryUI.highscoreText.text = entry.highscore + "";
+            StartCoroutine(DownloadSetImage(entry.profileLink, entryUI.profileImage));
 
             // txt.text = i + 1 + ". " + entry.username + "  -  " + entry.highscore;
         }
@@ -64,5 +67,26 @@ public class MenuLeaderboardController : MonoBehaviour
         GameManager.Instance().SwitchState(GameState.MAINMENU);
         AudioManager.Instance().PlayAudio("click_heavy");
     }
+
+    IEnumerator DownloadSetImage(string url, Image image) {
+        UnityWebRequest uwr = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET);
+        uwr.downloadHandler = new DownloadHandlerTexture();
+        yield return uwr.SendWebRequest();
+
+	while(!uwr.isDone) {
+            yield return uwr;
+        }
+	
+	if(uwr.error == null) {
+	    Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
+	    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+	    image.sprite = sprite;	    	    
+	} else {
+            Debug.LogError(uwr.error);
+        }
+
+    }        
+
+
 
 }

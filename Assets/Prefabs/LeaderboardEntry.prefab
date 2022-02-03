@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rankText: {fileID: 7317606345042881721}
-  profileImage: {fileID: 0}
+  profileImage: {fileID: 8451359273525182890}
   usernameText: {fileID: 7889680882083425515}
   highscoreText: {fileID: 7889724996557695540}
 --- !u!1 &6353933986307933950

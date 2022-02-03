@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class LeaderboardEntryUI : MonoBehaviour
@@ -7,4 +9,5 @@ public class LeaderboardEntryUI : MonoBehaviour
     public Image profileImage;
     public Text usernameText;
     public Text highscoreText;
+
 }

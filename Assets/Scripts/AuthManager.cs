@@ -51,14 +51,14 @@ public class AuthManager : MonoBehaviour
 
             Firebase.Auth.Credential credential = Firebase.Auth.FacebookAuthProvider.GetCredential(accessToken);
 
-            // string profileLink = await FacebookAuthManager.Instance().GetProfileImageLink();
-	    // if(profileLink == null){
-            //     Debug.LogWarning("Couldn't retrieve profile URL");
-            //     return;
-            // }
+            string profileLink = await FacebookAuthManager.Instance().GetProfileImageLink();
+	    if(profileLink == null){
+                Debug.LogWarning("Couldn't retrieve profile URL");
+                return;
+            }
 
-            // Player.Instance.playerData.profileLink = profileLink;
-            // Player.Instance.SaveCurrentPlayerData();
+            Player.Instance.playerData.profileLink = profileLink;
+            Player.Instance.SaveCurrentPlayerData();
 
             await _auth.SignInWithCredentialAsync(credential).ContinueWith(task =>
             {

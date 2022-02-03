@@ -40,19 +40,17 @@ public class MenuYouwinController : MonoBehaviour
 
 	if(AuthManager.Instance().isSignedIn){
             string username = AuthManager.Instance().username;
-
-            Player.Instance.playerData.profileLink = await FacebookAuthManager.Instance().GetProfileImageLink();
-
             LeaderboardManager.Instance.EnterNewLeaderboardEntry(
 		username,
 		Player.Instance.playerData.points,
-		"null"
+		Player.Instance.playerData.profileLink
 	    );
 
             Debug.Log("Saved online!");
         } else {
             Debug.Log("Only Saved locally!");
         }
+
 
 	Player.Instance.SaveCurrentPlayerData();
     }
