@@ -3,6 +3,22 @@ using UnityEngine;
 public class MenuGameplayController : MonoBehaviour
 {
     public GameObject pauseMenuHolder;
+    private bool _paused;
+
+    void Update() {
+	if(!(GameManager.Instance().GetCurrenetGameState() == GameState.GAMEPLAY)) return;
+	if(Input.GetKeyDown(KeyCode.Escape)) {
+	    if(!_paused) {
+		OnMenuPressed();
+                _paused = true;
+            }
+	    else {
+                OnResumePressed();
+                _paused = false;
+            }
+        }
+	
+    }
 
     public void OnMenuPressed(){
         SudokuLevel currentLevel = SudokuManager.Instance().GetCurrentSudokuLevel();

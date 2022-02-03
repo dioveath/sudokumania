@@ -243,6 +243,10 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+    public GameState GetCurrenetGameState(){
+        return _currentState;
+    }
     
 }
 

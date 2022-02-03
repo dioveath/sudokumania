@@ -82,11 +82,6 @@ public class AuthManager : MonoBehaviour
     void AuthStateChanged(object sender, System.EventArgs eventArgs){
         isSignedIn = _auth.CurrentUser != null;
 
-	if(isSignedIn)
-	    SaveManager.Instance.settingsData.isLinked = true;
-	else
-	    SaveManager.Instance.settingsData.isLinked = false;	    
-
         if(isSignedIn){
             Debug.Log("------SIGNED IN------");
             Debug.Log(_auth.CurrentUser.DisplayName);
@@ -97,6 +92,11 @@ public class AuthManager : MonoBehaviour
         } else {
             username = "";
         }
+
+	if(isSignedIn)
+	    SaveManager.Instance.settingsData.isLinked = true;
+	else
+	    SaveManager.Instance.settingsData.isLinked = false;	    	
 
         authStateChangedUEvent?.Invoke(_auth.CurrentUser);	
     }
