@@ -14,9 +14,5 @@ public class PlayerData {
         this.lastPlayedId = "";
         this.profileLink = "";
     }
-    
-    // public PlayerData(SudokuLevel sudokuLevel){
-    //     this.playingLevel = sudokuLevel;
-    // }
 
 }

@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
     public GameObject gameplayHolder;
     public GameObject infoHolder;
     public GameObject sudokuLinesHolder;
-    public GameObject fbLinkedHolder;
 
     // LevelSelect Menu
     [Header("LevelSelect Objects")]
@@ -95,16 +94,7 @@ public class GameManager : MonoBehaviour
                 loginHolder.SetActive(true);
                 break;
             case GameState.MAINMENU:
-		if(AuthManager.Instance().isSignedIn) {
-                    welcomeText.text = "Welcome, Mr. " + AuthManager.Instance().username;
-                    fbLinkedHolder.GetComponentInChildren<Text>().text = "LINKED";		    
-                }
-                else {
-                    welcomeText.text = "Welcome, fellow Traveller!";
-                    fbLinkedHolder.GetComponentInChildren<Text>().text = "NOT LINKED";
-                }		
-                // sudokuLinesHolder.SetActive(true);
-                mainMenuHolder.GetComponent<MenuMainController>().SetSudokuPoints();
+                mainMenuHolder.GetComponent<MenuMainController>().Init(Player.Instance.playerData);
                 mainMenuHolder.SetActive(true);
                 break;
 	    case GameState.LEVEL_SELECT:
@@ -251,18 +241,6 @@ public class GameManager : MonoBehaviour
     }
     
     public void OnAuthStateChange(FirebaseUser user){
-	switch(_currentState) {
-	    case GameState.MAINMENU:
-		if(AuthManager.Instance().isSignedIn) {
-                    welcomeText.text = "Welcome, Mr. " + AuthManager.Instance().username;
-                    fbLinkedHolder.GetComponentInChildren<Text>().text = "LINKED";		    
-                }
-                else {
-                    welcomeText.text = "Welcome, fellow Traveller!";
-                    fbLinkedHolder.GetComponentInChildren<Text>().text = "NOT LINKED";
-                }		
-                break;
-        }
     }
 
     public GameState GetCurrenetGameState(){
