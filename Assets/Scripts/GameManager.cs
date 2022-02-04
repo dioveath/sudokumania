@@ -136,10 +136,31 @@ public class GameManager : MonoBehaviour
     }
 
     void Update(){
+	// if(Input.GetKeyDown(KeyCode.Q)){
+        //     DialogData dialogData = new DialogData("Exit",
+	// 					   "Are you sure you want to exit?",
+	// 					   "Yes",
+	// 					   "No",
+	// 					   () => { DialogManager.Instance.HideDialog(); },
+	// 					   true,
+	// 					   () => { DialogManager.Instance.HideDialog(); } );
+	//     DialogManager.Instance.ShowDialog(dialogData);	    
+	// }
+
 	if(Input.GetKeyDown(KeyCode.Escape)){
 	    switch(_currentState){
 		case GameState.MAINMENU:
-		    Application.Quit();
+		    {
+                        DialogData dialogData = new DialogData("Exit",
+							       "Are you sure you want to exit?",
+							       "Yes",
+							       "No",
+							       () => { Application.Quit(); },
+							       false,
+							       () => { DialogManager.Instance.HideDialog(); } );
+                        DialogManager.Instance.ShowDialog(dialogData);
+                        // Application.Quit();
+                    }
 		    break;
 		case GameState.LEVEL_SELECT:
                     AudioManager.Instance().PlayAudio("click_heavy");
