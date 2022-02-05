@@ -13,6 +13,7 @@ public class DialogManager : MonoBehaviour
     public Button noButton;
     public Text headerText;
     public Text bodyText;
+    public Image _panelImage;
 
     private bool _isActive = false;
     private bool _isAnimating = false;
@@ -87,9 +88,10 @@ public class DialogManager : MonoBehaviour
 	}
 
         dialogPanel.SetActive(true);
+        _panelImage.DOColor(new Color(0, 0, 0, 1/255f * 87), 0.7f).OnComplete(() => _panelImage.enabled = true);
 
         _isAnimating = true;
-        dialogPanel.transform.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.4f).SetEase(Ease.InOutExpo).OnComplete(() => {
+        dialogPanel.transform.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.7f).SetEase(Ease.InOutElastic).OnComplete(() => {
 	    _isActive = true;
             _isAnimating = false;
         });;
@@ -97,15 +99,17 @@ public class DialogManager : MonoBehaviour
 
     public void HideDialog(){
 	if(!_isActive || _isAnimating) return;
-
         _isAnimating = true;
-        dialogPanel.transform.DOScale(new Vector3(0f, 0f, 0f), 0.4f).SetEase(Ease.InOutExpo).OnComplete(() => {
-	    _isActive = false;
-            _isAnimating = false;	    
-	    dialogPanel.SetActive(false);
 
-	    RectTransform parentRect = yesButton.transform.parent.GetComponent<RectTransform>();
-	    RectTransform yesRect = yesButton.GetComponent<RectTransform>();	    
+        _panelImage.DOColor(new Color(0, 0, 0, 0), 0.7f).OnComplete(() => _panelImage.enabled = false);	
+        dialogPanel.transform.DOScale(new Vector3(0f, 0f, 0f), 0.7f).SetEase(Ease.InOutElastic).OnComplete(() => {
+	    _isActive = false;
+            _isAnimating = false;
+            dialogPanel.SetActive(false);
+
+
+            RectTransform parentRect = yesButton.transform.parent.GetComponent<RectTransform>();
+	    RectTransform yesRect = yesButton.GetComponent<RectTransform>();
 
             yesRect.anchoredPosition = _defaultAnchoredPosition;
             yesRect.sizeDelta = _defaultSizeDelta;	    

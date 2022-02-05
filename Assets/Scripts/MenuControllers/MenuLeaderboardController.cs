@@ -40,9 +40,8 @@ public class MenuLeaderboardController : MonoBehaviour
 	    rect.SetParent(highscoreHolder.transform);
             rect.anchorMin = new Vector2(0.5f, 1);
             rect.anchorMax = new Vector2(0.5f, 1);
-            rect.anchoredPosition3D = new Vector3(0, -100 - (i * 300), 0);
+            rect.anchoredPosition3D = new Vector3(0, -155 - (i * 400), 0);
             rect.localScale = Vector3.one;
-
 
             entryUI.rankText.text = (i + 1) + ". ";
             entryUI.usernameText.text = entry.username;

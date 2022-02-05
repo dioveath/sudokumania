@@ -9,7 +9,6 @@ public class AuthManager : MonoBehaviour
     public bool isSigning = false;
 
     public UnityEvent<FirebaseUser> authStateChangedUEvent;
-    public string username;
 
     private FirebaseAuth _auth;
     private static AuthManager _instance;
@@ -88,17 +87,18 @@ public class AuthManager : MonoBehaviour
             Debug.Log(_auth.CurrentUser.DisplayName);
             Debug.Log(_auth.CurrentUser.Email);
             Debug.Log(_auth.CurrentUser.IsEmailVerified);
-            username = _auth.CurrentUser.DisplayName;
+            Player.Instance.playerData.playerName = _auth.CurrentUser.DisplayName;
             Debug.Log("------SIGNED IN------");	    
         } else {
-            username = "";
+            Player.Instance.playerData.playerName = "";
         }
 
 	if(isSignedIn)
-	    SaveManager.Instance.settingsData.isLinked = true;
-	else
-	    SaveManager.Instance.settingsData.isLinked = false;	    	
+            Player.Instance.playerData.isLinked = true;
+        else
+            Player.Instance.playerData.isLinked = false;
 
+        Player.Instance.SaveCurrentPlayerData();
         authStateChangedUEvent?.Invoke(_auth.CurrentUser);	
     }
 

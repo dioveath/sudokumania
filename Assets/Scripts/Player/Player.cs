@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
     public PlayerData playerData;
 
     private static Player _instance;
@@ -24,9 +23,6 @@ public class Player : MonoBehaviour
         Debug.Log("Player data loaded!");
     }
 
-    void Start()
-    {
-    }
 
     public void LoadSavedPlayerData(){
         playerData = SaveManager.Instance.LoadPlayerData();

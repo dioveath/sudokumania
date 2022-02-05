@@ -83,14 +83,11 @@ public class SaveManager : MonoBehaviour {
 
 }
 
-
 [System.Serializable]
 public class SettingsData {
     public bool sound;
-    public bool isLinked; // online login
 
     public SettingsData(bool sound){
 	this.sound = sound;
-        this.isLinked = false;
     }
 }

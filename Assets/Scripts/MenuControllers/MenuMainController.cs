@@ -19,6 +19,9 @@ public class MenuMainController : MonoBehaviour
     public Text sudokuPointsText;
     public Text welcomeText;
 
+    [Header("Welcome Dialog")]
+    public DialogData welcomeDialogData;
+
     private void SetSudokuPoints(int points){
 	sudokuPointsText.text = $"Your SP: {points}";
     }
@@ -42,9 +45,20 @@ public class MenuMainController : MonoBehaviour
     }
 
     public void Init(PlayerData data){
+	if(data.isFirstTime) {
+            welcomeDialogData.Yes = () =>
+            {
+                DialogManager.Instance.HideDialog();
+                Player.Instance.playerData.isFirstTime = false;
+                Player.Instance.SaveCurrentPlayerData();
+            };
+            DialogManager.Instance.ShowDialog(welcomeDialogData);
+        }
+
         SetSudokuPoints(data.points);
-        SetFacebookStatus(SaveManager.Instance.settingsData.isLinked);
-        SetWelcomeMessage(AuthManager.Instance().username);
+        SetFacebookStatus(data.isLinked);
+        SetWelcomeMessage(data.playerName);
+
         AuthManager.Instance().authStateChangedUEvent.AddListener(OnAuthStateChanged);
     }
 
@@ -82,7 +96,7 @@ public class MenuMainController : MonoBehaviour
 	_loadingTween = facebookIcon.transform.DORotate(new Vector3(0, 0, 360), 1.4f, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear);
 	_loadingTween.SetAutoKill(false).OnComplete(() => _loadingTween.Restart());	
 
-	if(!SaveManager.Instance.settingsData.isLinked) {
+	if(!Player.Instance.playerData.isLinked) {
 	    AudioManager.Instance().PlayAudio("click_basic");	    
 	    AuthManager.Instance().LoginWithFacebook();
 	} else {

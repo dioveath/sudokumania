@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
                 break;
 	    case GameState.YOUWIN:
                 youwinHolder.SetActive(true);
-                youwinHolder.GetComponent<MenuYouwinController>().SetCompletedStats();
+                youwinHolder.GetComponent<MenuYouwinController>().Init();
                 break;
 	    case GameState.INFO:
                 infoHolder.SetActive(true);
