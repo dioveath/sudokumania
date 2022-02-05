@@ -78,18 +78,16 @@ public class MenuMainController : MonoBehaviour
     }
 
     public void OnFacebookPressed(){
-	if(!SaveManager.Instance.settingsData.isLinked) {
-	    AuthManager.Instance().LoginWithFacebook();
-	    AudioManager.Instance().PlayAudio("click_basic");	    
-	} else {
-            AuthManager.Instance().Logout();
-	    AudioManager.Instance().PlayAudio("click_heavy");	    	    
-        }
+	facebookIcon.sprite = loadingIcon;
+	_loadingTween = facebookIcon.transform.DORotate(new Vector3(0, 0, 360), 1.4f, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear);
+	_loadingTween.SetAutoKill(false).OnComplete(() => _loadingTween.Restart());	
 
-	if(AuthManager.Instance().isSigning){
-            facebookIcon.sprite = loadingIcon;
-            _loadingTween = facebookIcon.transform.DORotate(new Vector3(0, 0, 360), 1.4f, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear);
-            _loadingTween.SetAutoKill(false).OnComplete(() => _loadingTween.Restart());
+	if(!SaveManager.Instance.settingsData.isLinked) {
+	    AudioManager.Instance().PlayAudio("click_basic");	    
+	    AuthManager.Instance().LoginWithFacebook();
+	} else {
+	    AudioManager.Instance().PlayAudio("click_heavy");	    	    
+            AuthManager.Instance().Logout();
         }
 
     }

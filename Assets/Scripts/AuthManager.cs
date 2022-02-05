@@ -7,6 +7,7 @@ public class AuthManager : MonoBehaviour
 
     public bool isSignedIn = false;
     public bool isSigning = false;
+
     public UnityEvent<FirebaseUser> authStateChangedUEvent;
     public string username;
 

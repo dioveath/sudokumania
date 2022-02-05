@@ -2319,7 +2319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa308cc55b130404ead6345caaacf536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockSize: 0.85
+  blockSize: 0.9
   blockGap: 0.2
   inputBlockPrefab: {fileID: 6268905282996544781, guid: 33c435ed0dd7a054695f13e8344d2ab0,
     type: 3}
@@ -2364,7 +2364,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 569262655}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 721977721}
@@ -2411,8 +2411,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: -0.42, y: 2.27, z: 0}
-  - {x: -0.42, y: -0.27, z: 1}
+  - {x: -0.5, y: 2.48, z: -2.5}
+  - {x: -0.5, y: -0.48, z: -2.5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -2421,7 +2421,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.023256302
+        value: 0.041597366
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2865,8 +2865,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 721977720}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5127, y: 0.0627, z: 1.14}
-  m_LocalScale: {x: 0.19010723, y: 0.29110587, z: 1}
+  m_LocalPosition: {x: 2.5127, y: 0.0401, z: 0}
+  m_LocalScale: {x: 0.22575232, y: 0.34722716, z: 1}
   m_Children:
   - {fileID: 876253600}
   - {fileID: 1685377015}
@@ -2874,7 +2874,7 @@ Transform:
   - {fileID: 569262656}
   - {fileID: 1654825894}
   m_Father: {fileID: 1567271184}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &721977722
 SpriteRenderer:
@@ -3328,7 +3328,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 876253599}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 91.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 721977721}
@@ -3375,8 +3375,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: -1.27, y: 2.27, z: -2}
-  - {x: 1.27, y: 2.27, z: -2}
+  - {x: -1.27, y: 2.27, z: -2.5}
+  - {x: 1.27, y: 2.27, z: -2.5}
   - {x: 1.27, y: -0.27, z: -2}
   - {x: -1.27, y: -0.27, z: -2}
   m_Parameters:
@@ -3705,7 +3705,7 @@ MonoBehaviour:
   - audioClip: {fileID: 8300000, guid: 186500c3114653140a197a3b156807a2, type: 3}
     name: applause6
   allMusics:
-  - audioClip: {fileID: 8300000, guid: f1fa15c60d8da2b4c875b0ee12c617cf, type: 3}
+  - audioClip: {fileID: 8300000, guid: 37b8615c81dd7f14bb05e37239818a78, type: 3}
     name: game_menu
   _sfxSource: {fileID: 1003552095}
   _musicSource: {fileID: 1003552094}
@@ -5364,6 +5364,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingUI: {fileID: 0}
+--- !u!1 &1337317916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1337317917}
+  m_Layer: 0
+  m_Name: SudokuHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1337317917
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337317916}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.509512, y: -0.9289046, z: 0.3756482}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1567271184}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1343880072
 GameObject:
   m_ObjectHideFlags: 0
@@ -5933,7 +5963,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberBlockPrefab: {fileID: 835571188077092696, guid: 38f5c5c77a3b244439fc70fb7c63f6b9,
     type: 3}
-  blockSize: 0.4
+  blockSize: 0.5
   blockGap: 0.08
   offsetPosition: {x: 0, y: 1}
   lineRenderer: {fileID: 876253601}
@@ -5948,8 +5978,8 @@ Transform:
   m_LocalPosition: {x: -2.509512, y: 0.9289046, z: -0.3756482}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1683961660}
   - {fileID: 721977721}
+  - {fileID: 1337317917}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6083,7 +6113,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654825893}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 721977721}
@@ -6130,8 +6160,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0.42, y: 2.27, z: 0}
-  - {x: 0.42, y: -0.27, z: 1}
+  - {x: 0.5, y: 2.48, z: -2.5}
+  - {x: 0.5, y: -0.48, z: -2.5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -6140,7 +6170,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.023256302
+        value: 0.041597366
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6339,36 +6369,6 @@ MonoBehaviour:
   loopCount: 0
   easeType: 0
   loopType: 1
---- !u!1 &1683961659
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1683961660}
-  m_Layer: 0
-  m_Name: SudokuHolder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1683961660
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683961659}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.509512, y: -0.9289046, z: 0.3756482}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1567271184}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1685377014
 GameObject:
   m_ObjectHideFlags: 0
@@ -6394,7 +6394,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1685377014}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 721977721}
@@ -6441,8 +6441,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: -1.27, y: 1.42, z: 0}
-  - {x: 1.27, y: 1.42, z: 1}
+  - {x: -1.48, y: 1.5, z: -2.5}
+  - {x: 1.48, y: 1.5, z: -2.5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -6451,7 +6451,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.023256302
+        value: 0.041597366
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -7242,7 +7242,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2017185150}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 721977721}
@@ -7289,8 +7289,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: -1.27, y: 0.58, z: 0}
-  - {x: 1.27, y: 0.58, z: 1}
+  - {x: -1.48, y: 0.5, z: -2.5}
+  - {x: 1.48, y: 0.5, z: -2.5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -7299,7 +7299,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.023256302
+        value: 0.041597366
         inSlope: 0
         outSlope: 0
         tangentMode: 0
