@@ -124,5 +124,11 @@ public class FacebookAuthManager : MonoBehaviour
         }
     }
 
+    public void LogOut(){
+	if(FB.IsLoggedIn)
+            FB.LogOut();
+        else 
+            Debug.LogWarning("FB Not logged in!");
+    }
     
 }

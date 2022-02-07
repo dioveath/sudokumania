@@ -4418,6 +4418,12 @@ MonoBehaviour:
   authStateChangedUEvent:
     m_PersistentCalls:
       m_Calls: []
+  loginErrorDialogData:
+    headerText: 
+    bodyText: 
+    yesText: OKAY
+    noText: 
+    isOneButton: 1
 --- !u!114 &1212236685
 MonoBehaviour:
   m_ObjectHideFlags: 0

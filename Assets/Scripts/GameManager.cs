@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
                 sudokuLinesHolder.SetActive(false);
                 SudokuManager.Instance().Finish();
                 gameplayHolder.SetActive(false);
+                gameplayHolder.GetComponent<MenuGameplayController>().Init();
                 break;
             case GameState.YOUWIN:
                 youwinHolder.SetActive(false);
@@ -111,7 +112,8 @@ public class GameManager : MonoBehaviour
 		break;
             case GameState.GAMEPLAY:
                 sudokuLinesHolder.SetActive(true);
-                gameplayHolder.SetActive(true);		
+                gameplayHolder.SetActive(true);
+                gameplayHolder.GetComponent<MenuGameplayController>().CleanUp();		
                 break;
 	    case GameState.YOUWIN:
                 youwinHolder.SetActive(true);

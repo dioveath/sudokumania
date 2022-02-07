@@ -58,7 +58,7 @@ public class MenuMainController : MonoBehaviour
         SetSudokuPoints(data.points);
         SetFacebookStatus(data.isLinked);
         SetWelcomeMessage(data.playerName);
-
+	
         AuthManager.Instance().authStateChangedUEvent.AddListener(OnAuthStateChanged);
     }
 
@@ -103,7 +103,6 @@ public class MenuMainController : MonoBehaviour
 	    AudioManager.Instance().PlayAudio("click_heavy");	    	    
             AuthManager.Instance().Logout();
         }
-
     }
 
     public void OnAuthStateChanged(FirebaseUser user){

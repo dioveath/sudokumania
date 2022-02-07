@@ -70,7 +70,7 @@ public class DialogManager : MonoBehaviour
         noButton.GetComponentInChildren<Text>().text = dialogData.noText;
         headerText.text = dialogData.headerText;
         bodyText.text = dialogData.bodyText;
-        yesButton.onClick.AddListener(dialogData.Yes);
+        yesButton.onClick.AddListener(dialogData.Yes == null ? () => { DialogManager.Instance.HideDialog(); } : dialogData.Yes);
 
         RectTransform parentRect = yesButton.transform.parent.GetComponent<RectTransform>();
         RectTransform yesRect = yesButton.GetComponent<RectTransform>();
@@ -132,7 +132,7 @@ public struct DialogData {
                       string __bodyText,
                       string __yesText,
                       string __noText,
-                      UnityAction __yes,
+                      UnityAction __yes = null,
 		      bool __isOneButton = false,
 		      UnityAction __no = null) {
         this.headerText = __headerText;

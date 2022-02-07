@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using Firebase.Auth;
+using Firebase.Extensions;
 
 public class AuthManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class AuthManager : MonoBehaviour
     private FirebaseAuth _auth;
     private static AuthManager _instance;
 
+    [SerializeField]
+    private DialogData loginErrorDialogData;
 
     public static AuthManager Instance(){
         return _instance;
@@ -40,12 +43,20 @@ public class AuthManager : MonoBehaviour
 	    if(accessToken == "Error"){
                 Debug.LogWarning("Access Token Error");
                 isSigning = false;
+                loginErrorDialogData.headerText = "LOGIN ERROR";
+                loginErrorDialogData.bodyText = "There was some problem while logging in!";
+                DialogManager.Instance.ShowDialog(loginErrorDialogData);
+                authStateChangedUEvent?.Invoke(null);		
                 return;
             }
 
 	    if(accessToken == "Cancelled") {
-                Debug.LogWarning("Cancelled by User");
-                isSigning = false;		
+		Debug.LogWarning("Cancelled by User");
+                loginErrorDialogData.headerText = "LOGIN CANCELLED";
+                loginErrorDialogData.bodyText = "User cancelled the login!";
+                DialogManager.Instance.ShowDialog(loginErrorDialogData);		
+                isSigning = false;
+                authStateChangedUEvent?.Invoke(null);
                 return;
             }
 
@@ -54,28 +65,48 @@ public class AuthManager : MonoBehaviour
             string profileLink = await FacebookAuthManager.Instance().GetProfileImageLink();
 	    if(profileLink == null){
                 Debug.LogWarning("Couldn't retrieve profile URL");
+                loginErrorDialogData.headerText = "LOGIN ERROR";
+                loginErrorDialogData.bodyText = "Couldn't retrive Profile Picture of the User";
+                DialogManager.Instance.ShowDialog(loginErrorDialogData);
+                FacebookAuthManager.Instance().LogOut();
+                authStateChangedUEvent?.Invoke(null);		
                 return;
             }
 
             Player.Instance.playerData.profileLink = profileLink;
             Player.Instance.SaveCurrentPlayerData();
 
-            await _auth.SignInWithCredentialAsync(credential).ContinueWith(task =>
+            await _auth.SignInWithCredentialAsync(credential).ContinueWithOnMainThread(task =>
             {
 		isSigning = false;		
         	if(task.IsCanceled) { 
-        	    Debug.LogError("SignInWithCredentialAsync was canceled!");
+		    loginErrorDialogData.headerText = "LOGIN CANCELLED";
+                    loginErrorDialogData.bodyText = "Login cancelled by the user!";
+                    DialogManager.Instance.ShowDialog(loginErrorDialogData);		    
+                    Debug.LogError("SignInWithCredentialAsync was canceled!");
+		    authStateChangedUEvent?.Invoke(null);		    
         	    return;
         	}
         	if(task.IsFaulted){
+		    loginErrorDialogData.headerText = "LOGIN ERROR";
+                    loginErrorDialogData.bodyText = "Error: " + task.Exception;
+                    DialogManager.Instance.ShowDialog(loginErrorDialogData);  		    
         	    Debug.LogError("SignInWithCredentialAsync encoutered an error: " + task.Exception);
+		    authStateChangedUEvent?.Invoke(null);		    
         	    return;
         	}
+
+		loginErrorDialogData.headerText = "LOGIN SUCCESSFUL";		
+		loginErrorDialogData.bodyText = "Logged in with " + task.Result.DisplayName + "!";
+		DialogManager.Instance.ShowDialog(loginErrorDialogData);	    		
             });
 
         } else {
-            isSigning = false;
             Debug.LogWarning("Already signed in!");
+	    loginErrorDialogData.headerText = "LOGIN ERROR";
+	    loginErrorDialogData.bodyText = "Already signed in!";
+	    DialogManager.Instance.ShowDialog(loginErrorDialogData);	    
+            isSigning = false;
 	}
     }
 
@@ -104,6 +135,10 @@ public class AuthManager : MonoBehaviour
 
     public void Logout(){
         _auth.SignOut();
+        FacebookAuthManager.Instance().LogOut();	
+	loginErrorDialogData.headerText = "LOGOUT SUCCESSFUL";
+        loginErrorDialogData.bodyText = "Logged out!";
+        DialogManager.Instance.ShowDialog(loginErrorDialogData);	    			
     }
 
     void OnDestroy(){

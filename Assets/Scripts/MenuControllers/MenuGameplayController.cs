@@ -17,7 +17,6 @@ public class MenuGameplayController : MonoBehaviour
                 _paused = false;
             }
         }
-	
     }
 
     public void OnMenuPressed(){
@@ -49,6 +48,18 @@ public class MenuGameplayController : MonoBehaviour
         pauseMenuHolder.SetActive(false);
         GameManager.Instance().SwitchState(GameState.MAINMENU);
         AudioManager.Instance().PlayAudio("click_basic");
+    }
+
+    public void Init(){
+	if(Player.Instance.playerData.isFirstTime) {
+            ShowTutorial();
+        }
+    }
+
+    public void CleanUp(){
+    }
+
+    public void ShowTutorial(){
     }
 
 }
