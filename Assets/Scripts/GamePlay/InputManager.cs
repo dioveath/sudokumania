@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,17 +18,20 @@ public class InputManager : MonoBehaviour
     public InputEvent inputEvent;
 
     private static InputManager _instance;
-
-
-    void Awake(){
-        _instance = this;
+    public static InputManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                Debug.LogError("Error: No Input Manager!");
+            return _instance;
+        } private set {}
     }
 
-    public static InputManager Instance(){
-	if(_instance == null) {
-            Debug.LogWarning("Error: No InputManager instantiated as of now!");
-        }	
-        return _instance;
+    void Awake(){
+	if(_instance != null)
+            DestroyImmediate(this.gameObject);
+        _instance = this;
     }
 
     void Start()
@@ -68,7 +69,7 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-	if(_inputBlocks == null) return;
+        if(_inputBlocks == null) return;
 
         for (int i = 0; i < 10; i++){
             var inputBlock = _inputBlocks[i];
@@ -78,5 +79,8 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    public InputBlock GetInputBlock(int number){
+	return _inputBlocks[number];
+    }
 
 }

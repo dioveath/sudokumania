@@ -3,7 +3,13 @@ using UnityEngine;
 public class MenuGameplayController : MonoBehaviour
 {
     public GameObject pauseMenuHolder;
+    public GameObject tutorialObject;
     private bool _paused;
+
+    [SerializeField]
+    public DialogSequence sequence;
+    public DialogSequence secondSequence;
+    public DialogSequence thirdSequence;
 
     void Update() {
 	if(!(GameManager.Instance().GetCurrenetGameState() == GameState.GAMEPLAY)) return;
@@ -51,15 +57,37 @@ public class MenuGameplayController : MonoBehaviour
     }
 
     public void Init(){
-	if(Player.Instance.playerData.isFirstTime) {
+	if(!Player.Instance.playerData.isTutorialComplete) {
             ShowTutorial();
         }
     }
 
     public void CleanUp(){
+	SudokuManager.Instance().Finish();
     }
 
     public void ShowTutorial(){
+        DialogManager.Instance.StartDialogSequence(sequence, () => {
+            Player.Instance.playerData.isTutorialComplete = true;
+            Player.Instance.SaveCurrentPlayerData();
+            DialogManager.Instance.HideDialog();
+        });
+    }
+
+    public void ShowTutorial2(){
+        SudokuManager.Instance().SetInputActive(true);
+	DialogManager.Instance.StartDialogSequence(secondSequence, () => {
+	    DialogManager.Instance.HideDialog();
+	    SudokuManager.Instance().SetInputActive(false);
+	    TutorialManager.Instance.PromptInputBlock(SudokuManager.Instance().GetTutorialInputBlock(), () => {
+		SudokuManager.Instance().SetInputActive(true);
+		SudokuManager.Instance().OnInput(SudokuManager.Instance().GetTutorialInputBlock().GetInputValue());
+		DialogManager.Instance.StartDialogSequence(thirdSequence, () =>
+		{
+		    DialogManager.Instance.HideDialog();
+		});
+	    });
+	});
     }
 
 }

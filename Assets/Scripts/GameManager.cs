@@ -72,9 +72,8 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.GAMEPLAY:
                 sudokuLinesHolder.SetActive(false);
-                SudokuManager.Instance().Finish();
                 gameplayHolder.SetActive(false);
-                gameplayHolder.GetComponent<MenuGameplayController>().Init();
+                gameplayHolder.GetComponent<MenuGameplayController>().CleanUp();
                 break;
             case GameState.YOUWIN:
                 youwinHolder.SetActive(false);
@@ -113,7 +112,7 @@ public class GameManager : MonoBehaviour
             case GameState.GAMEPLAY:
                 sudokuLinesHolder.SetActive(true);
                 gameplayHolder.SetActive(true);
-                gameplayHolder.GetComponent<MenuGameplayController>().CleanUp();		
+                gameplayHolder.GetComponent<MenuGameplayController>().Init();		
                 break;
 	    case GameState.YOUWIN:
                 youwinHolder.SetActive(true);
@@ -128,17 +127,6 @@ public class GameManager : MonoBehaviour
     }
 
     void Update(){
-	// if(Input.GetKeyDown(KeyCode.Q)){
-        //     DialogData dialogData = new DialogData("Exit",
-	// 					   "Are you sure you want to exit?",
-	// 					   "Yes",
-	// 					   "No",
-	// 					   () => { DialogManager.Instance.HideDialog(); },
-	// 					   true,
-	// 					   () => { DialogManager.Instance.HideDialog(); } );
-	//     DialogManager.Instance.ShowDialog(dialogData);	    
-	// }
-
 	if(Input.GetKeyDown(KeyCode.Escape)){
 	    switch(_currentState){
 		case GameState.MAINMENU:
@@ -219,7 +207,7 @@ public class GameManager : MonoBehaviour
                 buttonObj.GetComponent<Image>().color = Color.white;		
 
             buttonObj.GetComponent<Button>().onClick.AddListener(() => {
-                SwitchState(GameState.GAMEPLAY);
+		SwitchState(GameState.GAMEPLAY);
 		SudokuManager.Instance().Init(SudokuUtils.allSudokuLevels[levelIndex]);
                 AudioManager.Instance().PlayAudio("click_wooden1");
             });

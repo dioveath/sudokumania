@@ -11,6 +11,7 @@ public class PlayerData {
     public string profileLink;
     public bool isLinked;
     public bool isFirstTime;
+    public bool isTutorialComplete;
 
     public PlayerData() {
         this.playingLevels = new List<SudokuLevel>();
@@ -18,6 +19,7 @@ public class PlayerData {
         this.profileLink = "";
         this.isLinked = false;
         this.isFirstTime = true;
+        this.isTutorialComplete = false;
     }
 
 }

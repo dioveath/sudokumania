@@ -4,8 +4,8 @@ public class SudokuManager : MonoBehaviour
 {
     private NumberBlock[,] _currentLayout;
     private NumberBlock _activeNumberBlock;
-    private int _activeY;
-    private int _activeX;
+    // private int _activeY;
+    // private int _activeX;
 
     private SudokuLevel _currentLevel;
     private float _timeElapsed = 0.0f;
@@ -14,7 +14,8 @@ public class SudokuManager : MonoBehaviour
     private bool _isInputDisabled = false; 
 
     private static SudokuManager _instance;
-    // private FirebaseDatabase _dbRef;
+    public NumberBlock tutorialBlock;
+    public InputBlock activeBlockAnswerInputBlock;
 
     void Awake(){
         _instance = this;
@@ -26,8 +27,8 @@ public class SudokuManager : MonoBehaviour
 
     public void Init(SudokuLevel sudokuLevel){
         _currentLayout = SudokuLayoutGenerator.Instance().GenerateSudokuLayout();
-        InputManager.Instance().GenerateInputBlocks();
-        InputManager.Instance().inputEvent.AddListener(OnInput);
+        InputManager.Instance.GenerateInputBlocks();
+        InputManager.Instance.inputEvent.AddListener(OnInput);
 
         SudokuLevel loadedLevel = Player.Instance.GetPlayingSudokuLevel(sudokuLevel.id);
         if(loadedLevel != null){ // if there is previous save
@@ -41,7 +42,29 @@ public class SudokuManager : MonoBehaviour
         AdsManager.Instance.RequestInterstitial();
 
         _levelRunning = true;
-        SetInputActive(true);
+
+        if (_currentLevel.id == "-MtvPvTVpipaRbX5lmlm" && Player.Instance.playerData.isFirstTime)
+        {
+            bool tutorialBlockSet = false;
+            for (int i = 0; i < 9; i++)
+            {
+                if (tutorialBlockSet) break;
+                for (int j = 0; j < 9; j++)
+                {
+                    NumberBlock block = _currentLayout[i, j];
+                    if (block.isEditable())
+                    {
+                        tutorialBlock = block;
+                        tutorialBlockSet = true;
+                        tutorialBlock.location.x = j;
+                        tutorialBlock.location.y = i;
+                        // _activeX = j;
+                        // _activeY = i;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void Finish(){
@@ -51,8 +74,8 @@ public class SudokuManager : MonoBehaviour
             Destroy(block.gameObject);
 	}
         _currentLayout = null;
-        InputManager.Instance().inputEvent.RemoveAllListeners();
-        InputManager.Instance().DestroyInputBlocks();
+        InputManager.Instance.inputEvent.RemoveAllListeners();
+        InputManager.Instance.DestroyInputBlocks();
     }
     
  
@@ -67,27 +90,27 @@ public class SudokuManager : MonoBehaviour
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 9; j++){
                 NumberBlock numberBlock = _currentLayout[i, j];
-
                 if (numberBlock.isTouched()){
-		    AudioManager.Instance().PlayAudio("click_basic");
-
-                    if(_activeNumberBlock != null) 
-                        _activeNumberBlock.setActive(false);
-
-		    if(_activeNumberBlock == numberBlock) {
-                        _activeNumberBlock.setActive(false);
-                        _activeNumberBlock = null;
-                        continue;
-                    }
-
-                    _activeNumberBlock = numberBlock;
-                    _activeNumberBlock.setActive(true);
-                    _activeX = j;
-                    _activeY = i;
+                    ProcessTouchBlock(numberBlock);
                 }
-
             }
 	}
+    }
+
+    public void ProcessTouchBlock(NumberBlock block){
+	AudioManager.Instance().PlayAudio("click_basic");
+
+	if(_activeNumberBlock != null) 
+	    _activeNumberBlock.setActive(false);
+
+	if(_activeNumberBlock == block) {
+	    _activeNumberBlock.setActive(false);
+	    _activeNumberBlock = null;
+            return;
+        }
+
+	_activeNumberBlock = block;
+	_activeNumberBlock.setActive(true);
     }
 
     public void ReloadLevel(){
@@ -108,14 +131,14 @@ public class SudokuManager : MonoBehaviour
         _isInputDisabled = !active;
     }
 
-    void OnInput(int inputValue){
+    public void OnInput(int inputValue){
 	if(_isInputDisabled) return;
 
         if(_activeNumberBlock != null){
-            _activeNumberBlock.ChangeNumber(inputValue);
-            _currentLevel.inputSudokuArray[_activeY, _activeX] = inputValue;
+            Vector2Int loc = new Vector2Int(_activeNumberBlock.location.x, _activeNumberBlock.location.y); _activeNumberBlock.ChangeNumber(inputValue);
+            _currentLevel.inputSudokuArray[loc.y, loc.x] = inputValue;
 
-	    if(IsValidPlacement(inputValue, _activeY, _activeX)) {
+	    if(IsValidPlacement(inputValue, loc.y, loc.x)) {
                 _activeNumberBlock.setValid(true);
 		AudioManager.Instance().PlayAudio("click_wooden2");		
 	    } else {
@@ -140,6 +163,18 @@ public class SudokuManager : MonoBehaviour
     bool IsValidPlacement(int inputValue, int y, int x){
 	return _currentLevel.validSolution[y, x] == inputValue;
     }
+
+    public int GetValidPlacement(int y, int x){
+        return _currentLevel.validSolution[y, x];
+    }
+
+    public InputBlock GetTutorialInputBlock(){
+	if(tutorialBlock == null) {
+            Debug.LogError("No Tutorial Block!");
+            return null;
+        }
+        return InputManager.Instance.GetInputBlock(GetValidPlacement(tutorialBlock.location.y, tutorialBlock.location.x));
+    } 
 
     void LoadSudokuLevel(SudokuLevel sudokuLevel){
 	if(_currentLayout == null || _currentLayout.Length == 0) {
@@ -190,5 +225,3 @@ public class SudokuManager : MonoBehaviour
     }
 
 }
-
-

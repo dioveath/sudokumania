@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class DialogManager : MonoBehaviour
 {
-
     public GameObject dialogPanel;
     public Button yesButton;
     public Button noButton;
@@ -22,7 +21,6 @@ public class DialogManager : MonoBehaviour
 
     [SerializeField]
     public Dictionary<string, DialogData> dialogDict;
-
 
     private static DialogManager _instance;
     public static DialogManager Instance { get
@@ -70,7 +68,7 @@ public class DialogManager : MonoBehaviour
         noButton.GetComponentInChildren<Text>().text = dialogData.noText;
         headerText.text = dialogData.headerText;
         bodyText.text = dialogData.bodyText;
-        yesButton.onClick.AddListener(dialogData.Yes == null ? () => { DialogManager.Instance.HideDialog(); } : dialogData.Yes);
+        yesButton.onClick.AddListener(dialogData.Yes == null ? () => {  } : dialogData.Yes);
 
         RectTransform parentRect = yesButton.transform.parent.GetComponent<RectTransform>();
         RectTransform yesRect = yesButton.GetComponent<RectTransform>();
@@ -101,12 +99,14 @@ public class DialogManager : MonoBehaviour
 	if(!_isActive || _isAnimating) return;
         _isAnimating = true;
 
+        yesButton.onClick.RemoveAllListeners();
+        noButton.onClick.RemoveAllListeners();
+
         _panelImage.DOColor(new Color(0, 0, 0, 0), 0.7f).OnComplete(() => _panelImage.enabled = false);	
         dialogPanel.transform.DOScale(new Vector3(0f, 0f, 0f), 0.7f).SetEase(Ease.InOutElastic).OnComplete(() => {
 	    _isActive = false;
             _isAnimating = false;
             dialogPanel.SetActive(false);
-
 
             RectTransform parentRect = yesButton.transform.parent.GetComponent<RectTransform>();
 	    RectTransform yesRect = yesButton.GetComponent<RectTransform>();
@@ -116,10 +116,28 @@ public class DialogManager : MonoBehaviour
 	});
     }
 
+    public void StartDialogSequence(DialogSequence sequence, UnityAction onComplete = null) {
+        Queue<string> sentenceQueue = new Queue<string>(sequence.sentences);
+        DialogData sequenceData = new DialogData(sequence.title, sentenceQueue.Dequeue(), "Continue", "", null, true, null);
+        sequenceData.Yes = (() =>
+        {
+	    if(sentenceQueue.Count != 0) {
+		string text = sentenceQueue.Dequeue();
+                bodyText.DOText(text, 0.5f);
+            } else {
+		if(onComplete == null)
+		    HideDialog();
+		else
+                    onComplete?.Invoke();
+            }
+        });
+        ShowDialog(sequenceData);
+    }
+
 }
 
 [Serializable]
-public struct DialogData {
+public class DialogData {
     public string headerText;
     public string bodyText;
     public string yesText;
@@ -143,4 +161,11 @@ public struct DialogData {
         this.isOneButton = __isOneButton;
         this.No = __no;
     }
+}
+
+[Serializable]
+public class DialogSequence {
+    public string title;
+    [TextArea(3, 10)]
+    public string[] sentences;
 }

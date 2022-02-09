@@ -7,8 +7,10 @@ public class NumberBlock : MonoBehaviour
     private SpriteRenderer _renderer;
     private bool _isActive;
     private bool _isEditable = true;
+    
     private bool _isValid = false;
     private int _currentValue = 0;
+    public Vector2Int location;
 
     [Header("Number Block Colors")]
     public Color activeColor;
@@ -22,9 +24,10 @@ public class NumberBlock : MonoBehaviour
     {
         _collider = GetComponent<Collider2D>();
         _renderer = GetComponent<SpriteRenderer>();
+        location = new Vector2Int();
         ChangeNumber(0);
     }
-
+    
     void Update()
     {
         if (_isEditable)
@@ -59,6 +62,10 @@ public class NumberBlock : MonoBehaviour
 
     public void setEditable(bool editable){
         _isEditable = editable;
+    }
+
+    public bool isEditable(){
+        return _isEditable;
     }
 
     public void setActive(bool active){

@@ -8,8 +8,6 @@ public class SudokuLayoutGenerator : MonoBehaviour
     public float blockGap = 0.13f;
     public Vector2 offsetPosition;
 
-    public LineRenderer lineRenderer;
-
     public static SudokuLayoutGenerator _instance;
 
     void Awake(){
@@ -37,13 +35,8 @@ public class SudokuLayoutGenerator : MonoBehaviour
         sudokuHolder.parent = transform;
 
         var numberBlocks = new NumberBlock[9, 9];
-        int lrIndex = 0;
-        lineRenderer.positionCount = 4;
-        for (int i = 0; i < 9; i++)
-        {
-
-            for (int j = 0; j < 9; j++)
-            {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 Vector3 newPos = new Vector3(offsetPosition.x + ((j - 4) * (blockSize/2f + blockGap)),
 					     offsetPosition.y + ((-i + 4) * (blockSize/2f + blockGap)),
 					     -2);
@@ -52,18 +45,12 @@ public class SudokuLayoutGenerator : MonoBehaviour
                 newObj.transform.localScale = new Vector3(blockSize, blockSize, 1);
                 NumberBlock block = newObj.GetComponent<NumberBlock>();
                 block.transform.parent = sudokuHolder;
-                numberBlocks[i, j] = block;
 
-		// if((i == 0 && j == 0) || (i == 0 && j == 8) || (i == 8 && j == 8)) {
-                //     Debug.Log("lrIndex: " + lrIndex);
-                //     lineRenderer.SetPosition(lrIndex++, newPos);
-		// }
+		block.location.x = j;
+                block.location.y = i;
+                numberBlocks[i, j] = block;
             }
 	}
-
-        // lineRenderer.SetPosition(lrIndex++, new Vector3(offsetPosition.x + ((0 - 4) * (blockSize / 2f + blockGap)),
-        //                      offsetPosition.y + ((-8 + 4) * (blockSize / 2f + blockGap)),
-        //                         -2));
 
         return numberBlocks;
     }
