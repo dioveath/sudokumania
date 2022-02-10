@@ -1,8 +1,9 @@
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Firebase.Database;
 using UnityEngine;
+
 
 public class SudokuUtils
 {
@@ -146,14 +147,17 @@ public class SudokuUtils
             }
 
         }
+	// PrintSolvingPuzzle(solvingPuzzle);
 
 	int iteration = 10;
         for(int iter = 0; iter < iteration; iter++){
-            PrintSolvingPuzzle(solvingPuzzle);
             for(int i = 0; i < 9; i++){
 		for(int j = 0; j < 9; j++){
                     if(solvingPuzzle[i, j].Count > 1) {
 			List<int> newPValues = getPossibleValues(solvingPuzzle, j, i);
+			// for(int k = 0; k < newPValues.Count; k++)
+                        //     Console.Write(newPValues[k] + " ");
+			// Console.WriteLine("|");
                         solvingPuzzle[i, j] = newPValues;
                     }
 		}
@@ -186,30 +190,24 @@ public class SudokuUtils
 
         List<int> possibleValues = new List<int>(solvingPuzzle[y, x]);
 
-        for (var j = 0; j < 9; j++)
+        for (int j = 0; j < 9; j++)
         {
-
             // horizontal check
             if (solvingPuzzle[y, j].Count == 1 && possibleValues.Contains(solvingPuzzle[y, j][0]))
             {
-		if(x == 5 && y == 0){
-                    Console.WriteLine("solvingPuzzle[" + y + ", " + j +"][0] : " + solvingPuzzle[y, j][0]);
-                    Console.WriteLine("Removing Horizontal: " + solvingPuzzle[y, j][0]);
-                }
+		// Console.WriteLine("solvingPuzzle[" + y + ", " + j +"][0] : " + solvingPuzzle[y, j][0]);
+		// Console.WriteLine("Removing Horizontal: " + solvingPuzzle[y, j][0]);
                 possibleValues.Remove(solvingPuzzle[y, j][0]);
             }
 
             // vertical check
             if (solvingPuzzle[j, x].Count == 1 && possibleValues.Contains(solvingPuzzle[j, x][0]))
             {
-		if(x == 5 && y == 0){
-                    Console.WriteLine("Removing Vertical: " + solvingPuzzle[j, x][0]);
-                }		
+		// Console.WriteLine("Removing Vertical: " + solvingPuzzle[j, x][0]);
                 possibleValues.Remove(solvingPuzzle[j, x][0]);
             }
 
             // 3x3 box check
-
             int offx = (x / 3);
             int offy = (y / 3);
             if(solvingPuzzle[offy * 3 + (j / 3), offx * 3 + j % 3].Count != 1) continue;
@@ -221,19 +219,15 @@ public class SudokuUtils
             {
                 possibleValues.Remove(value);
             }
-            if (x == 5 && y == 0)
-            {
-                Console.WriteLine("Removing : " + value);
-
-                Console.Write("[ ");
-                foreach (int k in possibleValues)
-                {
-                    Console.Write(k + ", ");
-                }
-                Console.WriteLine(" ]");
-		Console.WriteLine("==============================");
-            }
         }
+
+	// Console.Write("[ ");
+	// foreach (int k in possibleValues)
+	// {
+	//     Console.Write(k + ", ");
+	// }
+	// Console.WriteLine(" ]");
+	// Console.WriteLine("==============================");	
 
         return possibleValues;
     }
@@ -272,6 +266,59 @@ public class SudokuUtils
         pushedRef.SetRawJsonValueAsync(pzuString);
     }
 
+    public static int[,] GenerateSudokuLevel(){
+        List<int>[,] sudokuListArray = new List<int>[9, 9];
+	
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                sudokuListArray[i,j] = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            }
+        }
+	int iter = 20;
+	for(int k = 0; k < iter; k ++){
+	    for(int i = 0; i < 9; i+=3){
+		for (int j = 0; j < 9; j+=3){
+		    System.Random rnd = new System.Random();
+		    int x = j + rnd.Next(3);
+		    int y = i + rnd.Next(3);
+                    Console.WriteLine("x: " + x + " y: " + y);
+                    List<int> possibleValues = getPossibleValues(sudokuListArray, y, x);
+                    Console.Write("[");		    
+		    for (int a = 0; a < possibleValues.Count; a++){
+			Console.Write(possibleValues[a] + ", ");
+		    }
+                    Console.WriteLine("]");
+                    if (possibleValues.Count <= 1) continue;
+                    int[] shuffled = shuffleArray(possibleValues.ToArray());
+                    sudokuListArray[x, y] = new List<int> { shuffled[0] };
+		}
+	    }
+	}
+
+        int[,] sudokuArray = new int[9, 9];
+        for (int i = 0; i < 9; i ++){
+            for (int j = 0; j < 9; j ++){
+                List<int> numberList = sudokuListArray[j, i];
+		if(numberList.Count == 1)
+		    sudokuArray[j, i] = numberList[0];
+		else
+                    sudokuArray[j, i] = 0;
+            }
+        }
+
+        return sudokuArray;
+    }
+
+    public static int[] shuffleArray(int[] array){
+        System.Random rnd = new System.Random();
+        for (int i = 0; i < array.Length - 2; i++){
+            int rndIdx = rnd.Next(i, array.Length);
+            int tmp = array[rndIdx];
+            array[rndIdx] = array[i];
+            array[i] = tmp;
+        }
+        return array;
+    }
 
     public static void Main(){
         // if(isSudokuSolvable(easySudoku)){
@@ -280,10 +327,26 @@ public class SudokuUtils
         //     Console.WriteLine("Not Solvable");	    
         // }
 
-        string puzzleString = PuzzleToString(mediumSudoku);
-        Console.WriteLine(puzzleString);
-        int[,] puzzle = StringToPuzzle(puzzleString);
-        PrintPuzzle(puzzle);
+        // string puzzleString = PuzzleToString(mediumSudoku);
+        // Console.WriteLine(puzzleString);
+        // int[,] puzzle = StringToPuzzle(puzzleString);
+        // PrintPuzzle(puzzle);
+
+        int[,] generatedPuzzle = GenerateSudokuLevel();
+        PrintPuzzle(generatedPuzzle);
+
+        Console.WriteLine("isSolvable: " + isSudokuSolvable(generatedPuzzle));
+
+        // Fisher Yates Shuffle
+        // int[] numbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        // for(int i = 0;i < numbers.Length; i++)
+        //     Console.Write(numbers[i] + ", ");
+        // Console.WriteLine("---------------------------");
+
+        // int[] shuffledNumbers = shuffleArray(numbers);
+        // for(int i = 0;i < shuffledNumbers.Length; i++)
+        //     Console.Write(shuffledNumbers[i] + ", ");
+        // Console.WriteLine("---------------------------");	
 
     }
 
@@ -307,7 +370,8 @@ public class SudokuUtils
 
 		if(i * 9 + j > puzzleString.Length - 1) {
                     // safeguarding null if puzzleString badly formatted
-                    Debug.LogWarning("Puzzle String Badly Formatted! string:" + puzzleString);
+                    // Debug.LogWarning("Puzzle String Badly Formatted! string:" + puzzleString);
+                    Console.WriteLine("Puzzle String Badly Formatted! string:" + puzzleString);
                     return puzzle;
 		}
 
@@ -335,8 +399,10 @@ public class SudokuUtils
 
     public static void PrintPuzzle(int[,] puzzle){
         for (int i = 0; i < 9; i++){
-	    Console.Write("[ ");
+	    if(i % 3 == 0) Console.WriteLine("-----------------------------");
+            Console.Write("[ ");
             for (int j = 0; j < 9; j++){
+		if(j != 0 && j % 3 == 0) Console.Write("|");
                 Console.Write(puzzle[i, j]);
                 if(j != 8)
                     Console.Write(", ");
