@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Firebase.Database;
 using UnityEngine;
 
-
 public class SudokuUtils
 {
     
@@ -105,18 +104,11 @@ public class SudokuUtils
 	    }
 	}
 
+	// Array.Sort(allSudokuLevels
+
         return allSudokuLevels;
     }
     
-    // public static SudokuLevel GenerateSudokuLevel(){
-    //     int[,] inputArray = new int[9, 9];
-    //     int[,] puzzleArray = new int[9, 9];	
-    //     Array.Copy(debugSudoku, inputArray, 9*9);
-    //     Array.Copy(debugSudoku, puzzleArray, 9*9);	
-    //     return new SudokuLevel(puzzleArray, inputArray);
-    // }    
-
-
     public static bool isSudokuValid(int[,] puzzle)
     {
         int sum = 45;
@@ -246,7 +238,7 @@ public class SudokuUtils
         Debug.Log("Loading puzzles online....");
 	List<PuzzleToUpload> allPuzzles = new List<PuzzleToUpload>();
 
-        DataSnapshot snapshot = await dbRef.GetReference("Puzzles").LimitToFirst(10).GetValueAsync();
+        DataSnapshot snapshot = await dbRef.GetReference("Puzzles").OrderByChild("points").GetValueAsync();
 
         foreach(DataSnapshot childSnapshot in snapshot.Children){
             string json = childSnapshot.GetRawJsonValue();
@@ -274,7 +266,8 @@ public class SudokuUtils
                 sudokuListArray[i,j] = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             }
         }
-	int iter = 20;
+
+	int iter = 10;
 	for(int k = 0; k < iter; k ++){
 	    for(int i = 0; i < 9; i+=3){
 		for (int j = 0; j < 9; j+=3){
@@ -288,7 +281,7 @@ public class SudokuUtils
 			Console.Write(possibleValues[a] + ", ");
 		    }
                     Console.WriteLine("]");
-                    if (possibleValues.Count <= 1) continue;
+                    if (possibleValues.Count == 1) continue;
                     int[] shuffled = shuffleArray(possibleValues.ToArray());
                     sudokuListArray[x, y] = new List<int> { shuffled[0] };
 		}
@@ -410,7 +403,6 @@ public class SudokuUtils
             Console.WriteLine(" ]");
         }
     }
-
 
 }
 

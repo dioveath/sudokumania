@@ -59,7 +59,8 @@ public class MenuGameplayController : MonoBehaviour
     public void Init(){
 	if(!Player.Instance.playerData.isTutorialComplete) {
             ShowTutorial();
-        }
+	}
+        SudokuManager.Instance().ResumeSudokuGame();
     }
 
     public void CleanUp(){

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Firebase.Database;
 using Firebase.Auth;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class GameManager : MonoBehaviour
     public GameObject leaderboardHolder;
     public GameObject settingsHolder;
     public GameObject levelSelectHolder;
+    public GameObject allLevelsHolder;
     public GameObject youwinHolder;
     public GameObject gameplayHolder;
     public GameObject infoHolder;
@@ -23,6 +25,7 @@ public class GameManager : MonoBehaviour
     public GameObject levelButtonHolder;
     public GameObject levelButton;
     public GameObject loadingUI;
+    public ScrollRect scrollRect;
 
     // MainMenu
     [Header("MainMenu Objects")]
@@ -45,6 +48,10 @@ public class GameManager : MonoBehaviour
     }
     
     void Start() {
+	#if !(DEVELOPMENT_BUILD || UNITY_EDITOR)
+	Debug.unityLogger.logEnabled = false;
+	#endif
+
         FirebaseManager.Instance().OnFirebaseInitialized.AddListener(OnFirebaseInitialize);
 
         SwitchState(GameState.MAINMENU);
@@ -181,7 +188,10 @@ public class GameManager : MonoBehaviour
         }
 
         int levelsCount = SudokuUtils.allSudokuLevels.Count;
-        loadingUI.SetActive(false);
+
+        RectTransform rt = allLevelsHolder.GetComponent<RectTransform>();
+        // Vector2 newSize = new Vector2(rt.sizeDelta.x, 400 + 100 * (levelsCount * 220));
+        // rt.sizeDelta = newSize;
 
         for (int i = 0; i < levelsCount; i++){
             GameObject buttonObj;
@@ -195,7 +205,7 @@ public class GameManager : MonoBehaviour
             rect.SetParent(levelButtonHolder.transform);
             rect.anchorMin = new Vector2(0.5f, 1f);
             rect.anchorMax = new Vector2(0.5f, 1f);
-	    rect.anchoredPosition3D = new Vector3(0, -1400 -(i * 150), 0);
+	    rect.anchoredPosition3D = new Vector3(0, 0, 0);
 	    rect.localScale = Vector3.one;
 
             int levelIndex = i;
@@ -214,16 +224,29 @@ public class GameManager : MonoBehaviour
         }
 
 	if(currentTotalButtons > levelsCount){
-	    Debug.Log("Destroying..!");
             for (int i = levelsCount; i < currentTotalButtons; i++){
-                Debug.Log(i);
                 currentButtons[i].gameObject.SetActive(false);
                 DestroyImmediate(currentButtons[i]);
             }
 	}
 
 	for (int i = 0; i < currentButtons.Length; i++)
-	    currentButtons[i].gameObject.SetActive(true);		
+	    currentButtons[i].gameObject.SetActive(true);
+
+        loadingUI.SetActive(false);
+        StartCoroutine(ScrollLevelsToTop());
+    }
+
+    IEnumerator ScrollLevelsToTop(){
+	scrollRect.verticalNormalizedPosition = 0f;
+        yield return new WaitForSeconds(0.2f);
+        // scrollRect.verticalNormalizedPosition = 1f;
+        float animationTime = 0.5f;
+        while(animationTime >= 0f){
+            animationTime -= Time.deltaTime;
+            scrollRect.verticalNormalizedPosition =  Mathf.Lerp(0f, 1f, 1f - (0.5f/1f * animationTime));
+            yield return null;
+        }
     }
 
     public void OnFirebaseInitialize(){

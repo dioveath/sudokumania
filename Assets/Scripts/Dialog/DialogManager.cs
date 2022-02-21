@@ -68,7 +68,7 @@ public class DialogManager : MonoBehaviour
         noButton.GetComponentInChildren<Text>().text = dialogData.noText;
         headerText.text = dialogData.headerText;
         bodyText.text = dialogData.bodyText;
-        yesButton.onClick.AddListener(dialogData.Yes == null ? () => {  } : dialogData.Yes);
+        yesButton.onClick.AddListener(dialogData.Yes == null ? () => { HideDialog(); } : dialogData.Yes);
 
         RectTransform parentRect = yesButton.transform.parent.GetComponent<RectTransform>();
         RectTransform yesRect = yesButton.GetComponent<RectTransform>();
@@ -96,7 +96,7 @@ public class DialogManager : MonoBehaviour
     }
 
     public void HideDialog(){
-	if(!_isActive || _isAnimating) return;
+        if(!_isActive || _isAnimating) return;
         _isAnimating = true;
 
         yesButton.onClick.RemoveAllListeners();

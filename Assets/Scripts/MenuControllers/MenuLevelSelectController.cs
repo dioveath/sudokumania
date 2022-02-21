@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuLevelSelectController : MonoBehaviour
 {
 
     public GameObject loadingUI;
+    public ScrollRect scrollRect;
 
     void Start(){
 
