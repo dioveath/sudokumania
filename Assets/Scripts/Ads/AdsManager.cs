@@ -1,4 +1,4 @@
-// #define DEBUG
+#define DEBUG
 
 using UnityEngine;
 using GoogleMobileAds.Api;
@@ -53,7 +53,7 @@ public class AdsManager : MonoBehaviour
 
     void RequestBanner(){
         AdRequest request = new AdRequest.Builder().Build();
-        // _bannerView.LoadAd(request);
+        _bannerView.LoadAd(request);
     }
 
     public void RequestInterstitial(){
@@ -63,7 +63,7 @@ public class AdsManager : MonoBehaviour
 
     public void ShowInterstitial(){
 	if(_interstitialAd.IsLoaded()){
-            // _interstitialAd.Show();
+            _interstitialAd.Show();
         }
     }
 

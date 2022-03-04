@@ -7,6 +7,7 @@ public class PlayerData {
     public List<SudokuLevel> playingLevels;
     public int points = 0;
     public string lastPlayedId;
+    public int lastCompletedIndex;
     public string playerName;
     public string profileLink;
     public bool isLinked;
@@ -20,6 +21,7 @@ public class PlayerData {
         this.isLinked = false;
         this.isFirstTime = true;
         this.isTutorialComplete = false;
+        this.lastCompletedIndex = 0;
     }
 
 }

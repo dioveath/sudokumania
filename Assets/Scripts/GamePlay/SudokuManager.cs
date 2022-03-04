@@ -4,8 +4,6 @@ public class SudokuManager : MonoBehaviour
 {
     private NumberBlock[,] _currentLayout;
     private NumberBlock _activeNumberBlock;
-    // private int _activeY;
-    // private int _activeX;
 
     private SudokuLevel _currentLevel;
     private float _timeElapsed = 0.0f;
@@ -40,7 +38,6 @@ public class SudokuManager : MonoBehaviour
 	}
 
         AdsManager.Instance.RequestInterstitial();
-
         _levelRunning = true;
 
         if (_currentLevel.id == "-MtvPvTVpipaRbX5lmlm" && Player.Instance.playerData.isFirstTime)
@@ -151,13 +148,20 @@ public class SudokuManager : MonoBehaviour
         }
 
 	if(SudokuUtils.isSudokuValid(_currentLevel.inputSudokuArray)) {
-            AudioManager.Instance().PlayAudio("applause6");
-            GameManager.Instance().SwitchState(GameState.YOUWIN);
-
-            AdsManager.Instance.ShowInterstitial();
-
-            _levelRunning = false;
+            OnWin();
         }
+    }
+
+    void OnWin(){
+	AudioManager.Instance().PlayAudio("applause6");
+	GameManager.Instance().SwitchState(GameState.YOUWIN);
+
+	AdsManager.Instance.ShowInterstitial();
+
+        Player.Instance.playerData.lastCompletedIndex = _currentLevel.index + 1;
+        Player.Instance.SaveCurrentPlayerData();
+
+        _levelRunning = false;
     }
 
     bool IsValidPlacement(int inputValue, int y, int x){

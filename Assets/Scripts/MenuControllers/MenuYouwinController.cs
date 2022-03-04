@@ -60,8 +60,14 @@ public class MenuYouwinController : MonoBehaviour
     public void OnMainMenuPressed(){
         GameManager.Instance().SwitchState(GameState.MAINMENU);
     }
+
     public void OnRetryPressed(){
         SudokuManager.Instance().ReloadLevel();
+        GameManager.Instance().SwitchState(GameState.GAMEPLAY);
+    }
+
+    public void OnNextLevelPressed(){
+        SudokuManager.Instance().Init(SudokuUtils.allSudokuLevels[Player.Instance.playerData.lastCompletedIndex]);
         GameManager.Instance().SwitchState(GameState.GAMEPLAY);
     }
 

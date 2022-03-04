@@ -64,8 +64,10 @@ public class SudokuUtils
 
     public static List<SudokuLevel> allSudokuLevels = new List<SudokuLevel>();
 
-    public static async Task<List<SudokuLevel>> GetAllLevels(FirebaseDatabase dbRef){
-	List<PuzzleToUpload> allSudokus = new List<PuzzleToUpload>();
+    public static async Task<List<SudokuLevel>> GetAllLevels(FirebaseDatabase dbRef, bool onlineLoad = false){
+	if(allSudokuLevels.Count != 0 && !onlineLoad) return allSudokuLevels;
+
+        List<PuzzleToUpload> allSudokus = new List<PuzzleToUpload>();
 
         if(dbRef == null) {
             // LoadPuzzlesOffline();
@@ -87,7 +89,7 @@ public class SudokuUtils
             int[,] solvedPuzzle = SudokuUtils.SudokuSolve(puzzle);
 	    if (!isSudokuValid(solvedPuzzle))
 	    {
-		Debug.LogWarning("Suduku " + (i+1) + " Not Solvable!");
+		Debug.LogWarning("Sudoku " + (i+1) + " Not Solvable!");
 		// Console.WriteLine("Sudoku " + i + 1 + " Not Solvable!");
 		continue;
 	    }
@@ -98,9 +100,9 @@ public class SudokuUtils
 	    Array.Copy(puzzle, puzzleArray, 9 * 9);
 
 	    if(i < allSudokuLevels.Count) {
-                allSudokuLevels[i] = new SudokuLevel(allSudokus[i].id, inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points);
+                allSudokuLevels[i] = new SudokuLevel(allSudokus[i].id, inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points, i);
             } else {
-		allSudokuLevels.Add(new SudokuLevel(allSudokus[i].id, inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points));
+		allSudokuLevels.Add(new SudokuLevel(allSudokus[i].id, inputArray, puzzleArray, solvedPuzzle, allSudokus[i].points, i));
 	    }
 	}
 
@@ -415,8 +417,9 @@ public class SudokuLevel {
     public int points;
     public bool isCompleted;
     public float lastElapsedTime;
+    public int index;
 
-    public SudokuLevel(string __id, int[,] __sudokuArray, int[,] __inputSudokuArray, int[,] __validSolution, int points){
+    public SudokuLevel(string __id, int[,] __sudokuArray, int[,] __inputSudokuArray, int[,] __validSolution, int points, int __index){
         this.id = __id;
         this.sudokuArray = __sudokuArray;
         this.inputSudokuArray = __inputSudokuArray;
@@ -424,6 +427,7 @@ public class SudokuLevel {
         this.points = points;
         this.isCompleted = false;
         this.lastElapsedTime = 0.0f;
+	this.index = __index;
     }
 
     public SudokuLevel Copy(){
@@ -435,7 +439,7 @@ public class SudokuLevel {
         Array.Copy(inputSudokuArray, newInputSudokuArray, newSudokuArray.Length);
         Array.Copy(validSolution, newValidSolution, newSudokuArray.Length);	
 
-        return new SudokuLevel(id, newSudokuArray, newInputSudokuArray, newValidSolution, points);
+        return new SudokuLevel(id, newSudokuArray, newInputSudokuArray, newValidSolution, points, index);
     }
 
     public void Reset(){

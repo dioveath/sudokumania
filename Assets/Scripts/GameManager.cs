@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using Firebase.Database;
 using Firebase.Auth;
 using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -173,8 +175,8 @@ public class GameManager : MonoBehaviour
     async void HandleInitializeLevels(){
         loadingUI.SetActive(true);
 
-        Button[] currentButtons = levelButtonHolder.GetComponentsInChildren<Button>();
-        int currentTotalButtons = currentButtons.Length;	
+        List<Button> currentButtons = levelButtonHolder.GetComponentsInChildren<Button>().ToList();
+        int currentTotalButtons = currentButtons.Count;	
         for (int i = 0; i < currentTotalButtons; i++)
 	    currentButtons[i].gameObject.SetActive(false);
 	
@@ -188,7 +190,6 @@ public class GameManager : MonoBehaviour
         }
 
         int levelsCount = SudokuUtils.allSudokuLevels.Count;
-
         RectTransform rt = allLevelsHolder.GetComponent<RectTransform>();
         // Vector2 newSize = new Vector2(rt.sizeDelta.x, 400 + 100 * (levelsCount * 220));
         // rt.sizeDelta = newSize;
@@ -197,6 +198,7 @@ public class GameManager : MonoBehaviour
             GameObject buttonObj;
             if(i >= currentTotalButtons) {
 		buttonObj = Instantiate(levelButton, Vector3.zero, Quaternion.identity);
+		currentButtons.Add(buttonObj.GetComponent<Button>());
 	    } else {
                 buttonObj = currentButtons[i].gameObject;
             }
@@ -210,11 +212,21 @@ public class GameManager : MonoBehaviour
 
             int levelIndex = i;
 
-            buttonObj.GetComponentInChildren<Text>().text = "Level " + (levelIndex+1);
-	    if(Player.Instance.playerData.lastPlayedId == SudokuUtils.allSudokuLevels[levelIndex].id)
+            buttonObj.GetComponentInChildren<Text>().text = "" + (levelIndex+1);
+	    buttonObj.GetComponent<Image>().color = Color.white;
+
+            for (int j = 0; j < Player.Instance.playerData.playingLevels.Count; j++){
+                if (Player.Instance.playerData.playingLevels[j].id.Equals(SudokuUtils.allSudokuLevels[levelIndex].id)) {
+                    buttonObj.GetComponent<Image>().color = Color.white;
+		    if(Player.Instance.playerData.playingLevels[j].isCompleted){
+			buttonObj.GetComponent<Image>().color = Color.yellow;			
+		    }
+                    break;
+                }
+	    }
+
+            if(Player.Instance.playerData.lastPlayedId == SudokuUtils.allSudokuLevels[levelIndex].id)
                 buttonObj.GetComponent<Image>().color = Color.green;
-	    else
-                buttonObj.GetComponent<Image>().color = Color.white;		
 
             buttonObj.GetComponent<Button>().onClick.AddListener(() => {
 		SwitchState(GameState.GAMEPLAY);
@@ -230,8 +242,14 @@ public class GameManager : MonoBehaviour
             }
 	}
 
-	for (int i = 0; i < currentButtons.Length; i++)
+	for (int i = 0; i < currentButtons.Count; i++) {
+            if(i > (Player.Instance.playerData.lastCompletedIndex)){
+                currentButtons[i].interactable = false;
+            } else {
+                currentButtons[i].interactable = true;		
+	    }	    
 	    currentButtons[i].gameObject.SetActive(true);
+	}
 
         loadingUI.SetActive(false);
         StartCoroutine(ScrollLevelsToTop());
