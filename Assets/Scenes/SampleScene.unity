@@ -1724,6 +1724,7 @@ MonoBehaviour:
     yesText: Let's do it!
     noText: 
     isOneButton: 1
+  isCancelling: 0
 --- !u!1 &387282079
 GameObject:
   m_ObjectHideFlags: 0
@@ -3396,7 +3397,7 @@ MonoBehaviour:
     m_Left: 0
     m_Right: 0
     m_Top: 500
-    m_Bottom: 0
+    m_Bottom: 500
   m_ChildAlignment: 0
   m_Spacing: 40
   m_ChildForceExpandWidth: 1
@@ -4589,6 +4590,8 @@ MonoBehaviour:
     type: 3}
   highscoreHolder: {fileID: 952702955}
   loadingImage: {fileID: 116835715}
+  defaultProfileSprite: {fileID: 21300000, guid: 0589d3eb4e6ef4d269663222f1a92efa,
+    type: 3}
 --- !u!1 &1212236681
 GameObject:
   m_ObjectHideFlags: 0

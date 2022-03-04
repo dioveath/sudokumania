@@ -11,6 +11,7 @@ public class MenuLeaderboardController : MonoBehaviour
     public GameObject leaderboardEntryPrefab;
     public GameObject highscoreHolder;
     public Image loadingImage;
+    public Sprite defaultProfileSprite;
 
     private List<LeaderboardEntryUI> _entryTexts;
 
@@ -46,6 +47,7 @@ public class MenuLeaderboardController : MonoBehaviour
             entryUI.rankText.text = (i + 1) + ". ";
             entryUI.usernameText.text = entry.username;
             entryUI.highscoreText.text = entry.highscore + "";
+            entryUI.profileImage.sprite = defaultProfileSprite;
             StartCoroutine(DownloadSetImage(entry.profileLink, entryUI.profileImage));
 
             // txt.text = i + 1 + ". " + entry.username + "  -  " + entry.highscore;
