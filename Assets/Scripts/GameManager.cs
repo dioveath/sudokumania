@@ -244,7 +244,7 @@ public class GameManager : MonoBehaviour
         float animationTime = 0.5f;
         while(animationTime >= 0f){
             animationTime -= Time.deltaTime;
-            scrollRect.verticalNormalizedPosition =  Mathf.Lerp(0f, 1f, 1f - (0.5f/1f * animationTime));
+	    scrollRect.verticalNormalizedPosition =  Mathf.Lerp(0f, 1f, 1f - (0.5f/1f * animationTime));
             yield return null;
         }
     }

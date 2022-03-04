@@ -120,6 +120,7 @@ public class AuthManager : MonoBehaviour
             Debug.Log(_auth.CurrentUser.IsEmailVerified);
             Player.Instance.playerData.playerName = _auth.CurrentUser.DisplayName;
             Debug.Log("------SIGNED IN------");	    
+
         } else {
             Player.Instance.playerData.playerName = "";
         }

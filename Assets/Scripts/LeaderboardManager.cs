@@ -25,8 +25,6 @@ public class LeaderboardManager : MonoBehaviour
             DestroyImmediate(this.gameObject);
         }
         _instance = this;
-
-
     }
 
     public async Task<List<LeaderboardEntry>> GetLeaderboardEntries(){
@@ -69,8 +67,25 @@ public class LeaderboardManager : MonoBehaviour
 	    string json = JsonUtility.ToJson(entries[i]);
             await _dbRef.GetReference("Scores").Child(entries[i].username).SetRawJsonValueAsync(json);	    
 	}
-
     }
+
+    public async Task<int> GetHighscore(string username)
+    {
+        _dbRef = FirebaseDatabase.DefaultInstance;
+        if (_dbRef == null)
+        {
+            Debug.LogWarning("_dbRef == null");
+            return 0;
+        }
+
+        DataSnapshot snapshot = await _dbRef.GetReference("Scores/" + username).GetValueAsync();
+        if (snapshot.Exists)
+        {
+            LeaderboardEntry entry = JsonUtility.FromJson<LeaderboardEntry>(snapshot.GetRawJsonValue());
+            return entry.highscore;
+        }
+        return 0;
+    } 
 
 }
 

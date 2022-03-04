@@ -91,10 +91,25 @@ public class MenuMainController : MonoBehaviour
         GameManager.Instance().SwitchState(GameState.INFO);
     }
 
+    public bool isCancelling = false;
     public void OnFacebookPressed(){
-	facebookIcon.sprite = loadingIcon;
-	_loadingTween = facebookIcon.transform.DORotate(new Vector3(0, 0, 360), 1.4f, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear);
-	_loadingTween.SetAutoKill(false).OnComplete(() => _loadingTween.Restart());	
+	if(_loadingTween != null && !isCancelling) {
+            isCancelling = true;
+	    AudioManager.Instance().PlayAudio("click_heavy");	    
+
+            _loadingTween.OnComplete(() => {
+		SetFacebookStatus(Player.Instance.playerData.isLinked);
+                isCancelling = false;
+		_loadingTween = null;
+            });
+            _loadingTween.SetAutoKill(true);
+            return;
+        }
+	if(isCancelling) return;
+
+        facebookIcon.sprite = loadingIcon;
+        _loadingTween = facebookIcon.transform.DORotate(new Vector3(0, 0, 360), 1.4f, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear);
+        _loadingTween.SetAutoKill(false).OnComplete(() => _loadingTween.Restart());	
 
 	if(!Player.Instance.playerData.isLinked) {
 	    AudioManager.Instance().PlayAudio("click_basic");	    
@@ -105,11 +120,13 @@ public class MenuMainController : MonoBehaviour
         }
     }
 
-    public void OnAuthStateChanged(FirebaseUser user){
+    public async void OnAuthStateChanged(FirebaseUser user){
 	if(_loadingTween != null) {
             _loadingTween.OnComplete(() => {
-		SetFacebookStatus(user != null);				
-	    });
+		SetFacebookStatus(user != null);
+                isCancelling = false;
+		_loadingTween = null;
+            });
             _loadingTween.SetAutoKill(true);
         } else {
 	    SetFacebookStatus(user != null);	    
@@ -117,8 +134,12 @@ public class MenuMainController : MonoBehaviour
 
 	if(user != null){
 	    SetWelcomeMessage(user.DisplayName);
-	} else {
-	    SetWelcomeMessage("");	    
+            int highScore = await LeaderboardManager.Instance.GetHighscore(user.DisplayName);
+            Player.Instance.playerData.points = highScore;
+            Player.Instance.SaveCurrentPlayerData();
+            SetSudokuPoints(highScore);
+        } else {
+	    SetWelcomeMessage("");
 	}
     }
 
