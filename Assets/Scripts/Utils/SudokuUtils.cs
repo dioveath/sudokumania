@@ -89,7 +89,7 @@ public class SudokuUtils
             int[,] solvedPuzzle = SudokuUtils.SudokuSolve(puzzle);
 	    if (!isSudokuValid(solvedPuzzle))
 	    {
-		Debug.LogWarning("Sudoku " + (i+1) + " Not Solvable!");
+		Debug.LogWarning("Sudoku " + (i+1) + "(ID: " + allSudokus[i].id + ") Not Solvable!");
 		// Console.WriteLine("Sudoku " + i + 1 + " Not Solvable!");
 		continue;
 	    }
