@@ -94,7 +94,6 @@ public class GameManager : MonoBehaviour
 	    case GameState.INFO:
                 infoHolder.SetActive(false);
                 break;
-
         }
 
 	// Enter the given state
@@ -108,6 +107,7 @@ public class GameManager : MonoBehaviour
                 break;
 	    case GameState.LEVEL_SELECT:
                 HandleInitializeLevels();
+                levelSelectHolder.GetComponent<MenuLevelSelectController>().Init();
                 levelSelectHolder.SetActive(true);
                 break;
 	    case GameState.LEADERBOARD:
@@ -187,13 +187,11 @@ public class GameManager : MonoBehaviour
         }
         if(SudokuUtils.allSudokuLevels == null){
             Debug.LogWarning("NULL SudokuUtils.allSudokuLevels");
+            return;
         }
 
         int levelsCount = SudokuUtils.allSudokuLevels.Count;
         RectTransform rt = allLevelsHolder.GetComponent<RectTransform>();
-        // Vector2 newSize = new Vector2(rt.sizeDelta.x, 400 + 100 * (levelsCount * 220));
-        // rt.sizeDelta = newSize;
-
         for (int i = 0; i < levelsCount; i++){
             GameObject buttonObj;
             if(i >= currentTotalButtons) {
@@ -219,7 +217,7 @@ public class GameManager : MonoBehaviour
                 if (Player.Instance.playerData.playingLevels[j].id.Equals(SudokuUtils.allSudokuLevels[levelIndex].id)) {
                     buttonObj.GetComponent<Image>().color = Color.white;
 		    if(Player.Instance.playerData.playingLevels[j].isCompleted){
-			buttonObj.GetComponent<Image>().color = Color.yellow;			
+			buttonObj.GetComponent<Image>().color = Color.yellow;
 		    }
                     break;
                 }

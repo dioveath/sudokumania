@@ -115,12 +115,12 @@ public class AuthManager : MonoBehaviour
 
         if(isSignedIn){
             Debug.Log("------SIGNED IN------");
+            Debug.Log(_auth.CurrentUser.UserId);
             Debug.Log(_auth.CurrentUser.DisplayName);
             Debug.Log(_auth.CurrentUser.Email);
             Debug.Log(_auth.CurrentUser.IsEmailVerified);
             Player.Instance.playerData.playerName = _auth.CurrentUser.DisplayName;
             Debug.Log("------SIGNED IN------");	    
-
         } else {
             Player.Instance.playerData.playerName = "";
         }
@@ -131,7 +131,7 @@ public class AuthManager : MonoBehaviour
             Player.Instance.playerData.isLinked = false;
 
         Player.Instance.SaveCurrentPlayerData();
-        authStateChangedUEvent?.Invoke(_auth.CurrentUser);	
+        authStateChangedUEvent?.Invoke(_auth.CurrentUser);
     }
 
     public void Logout(){

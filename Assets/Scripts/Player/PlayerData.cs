@@ -25,3 +25,13 @@ public class PlayerData {
     }
 
 }
+
+[Serializable]
+public class OnlinePlayerData {
+    public string authProvider;
+    public string email;
+    public string fullName;
+    public string userId;
+    public int score;
+    public int lastCompletedIndex;
+}

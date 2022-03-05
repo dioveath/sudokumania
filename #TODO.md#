@@ -1,0 +1,59 @@
+## Design Decision
+Sudoku Mania primarily aimed for Childrens to play Sudoku, with points system and leaderboards. Puzzles will be
+easy to medium and there will be initial learning phase for all players to teach them basics of sudoku. 
+
+Each sudoku level/puzzle has points and one can get points after completing the puzzle based on time completed.
+The base time for getting all the point of the level is to complete the puzzle within 5:00 minutes. Player will
+be rewarded for completing earlier based upto 25% with 25% faster completion on the limit of 5:00 minutes. 
+Player will also be deducted for 25% points for completing slower with 100% slower.
+
+## Daily Sudoku
+Create a sudoku puzzle generator.
+Look cron job with firebase, to create sudoku puzzle on daily basis. automatically
+
+## Weekly Sudoku System
+- Puzzles will be stored in 'YY:Month:WW (e.g: 2022:March:1) 
+  Year wil be return in number, Month will be in Words and week will be in numbers. Every Month will have 4 weeks.
+
+
+
+## Checkpoints
+- Change SudokuLevel structure to include difficulty level, points, and id on firebase console. --Done--
+- Create a Simple Web app to help add, edit and remove SudokuLevels on firebase console. --Trashed--
+- Create a score based game. --Done--
+- Create SaveSystem for Sudoku Levels. Save puzzle state. --Done--
+- Player needs to see the score they scored for the level. --Done--
+- Create gameplay pause Menu. --Done--
+- Add GoogleAds to the game. Banner ads always, and interstitial ad, (optional: rewarded ad for getting hints?? --Done--
+- Login with google or facebook to get to leaderboard & saving online. --Done--
+- Create a save system for puzzle to resume and continue the game. --Done--
+- Player should be able to grab less points for completing the previously completed points. --Done--
+- Add Lines to Sudokuboard. --Done--
+- Add Tween Animation. --Done-- 
+- Add Animated background --Done--
+- UI Upgrades Polish More. --Done--
+- Add Dialog/Modal System. --Done--
+- Add welcome message. --Done--
+- Use Dialog system for Error pop ups, and message to convey. --Done--
+- Add Tutorial Section.  --Partially Done--
+- Create SudokuLevelGenerator. --JS Done--
+- Add 10 levels. --Done--
+
+- Add Loading screen for opening & loading levels.
+- Update UI to show variance in completed and incomplete levels.  --Done--
+- Add Next Level Button --Done--
+
+- Integrate Weekly Sudoku System.
+
+- Friends Leaderboard
+- Improve point scoring system
+
+## Need Fixes
+- Leaderboard spawning too many texts. --Done--
+- Change default sound settings to on. (for first time opening of game). --Done--
+- Scale down the size of whole game. --Done--
+- FB Linked to AuthStateChanged. --Done--
+- Move FB Link Button from Settings to MainMenu. --Done--
+- Implement Gameplay Back pressed response. --Done--
+- Scale the size of SudokuBoard. --Done--
+- Change Background Music. --Done--

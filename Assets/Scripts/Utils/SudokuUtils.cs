@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Firebase.Database;
 using UnityEngine;
@@ -64,9 +65,9 @@ public class SudokuUtils
 
     public static List<SudokuLevel> allSudokuLevels = new List<SudokuLevel>();
 
+
     public static async Task<List<SudokuLevel>> GetAllLevels(FirebaseDatabase dbRef, bool onlineLoad = false){
 	if(allSudokuLevels.Count != 0 && !onlineLoad) return allSudokuLevels;
-
         List<PuzzleToUpload> allSudokus = new List<PuzzleToUpload>();
 
         if(dbRef == null) {
@@ -236,11 +237,11 @@ public class SudokuUtils
     //     return allSudokus;
     // }
 
+    public static string season = DateTime.Now.Year + "-" + DateTime.Now.ToString("MMMM", CultureInfo.InvariantCulture) + "-" + DateTime.Now.Day / 4;
     public static async Task<List<PuzzleToUpload>> LoadPuzzlesFromDatabase(FirebaseDatabase dbRef){
         Debug.Log("Loading puzzles online....");
 	List<PuzzleToUpload> allPuzzles = new List<PuzzleToUpload>();
-
-        DataSnapshot snapshot = await dbRef.GetReference("Puzzles").OrderByChild("points").GetValueAsync();
+        DataSnapshot snapshot = await dbRef.GetReference("Puzzles/" + season).OrderByChild("points").GetValueAsync();
 
         foreach(DataSnapshot childSnapshot in snapshot.Children){
             string json = childSnapshot.GetRawJsonValue();

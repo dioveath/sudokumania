@@ -5,7 +5,7 @@ using Firebase.Database;
 class FirebaseDatabaseManager : MonoBehaviour
 {
 
-    private DatabaseReference _db;
+    public FirebaseDatabase db;
     // private bool isInitialized = false;
 
     private static FirebaseDatabaseManager _instance;
@@ -32,7 +32,7 @@ class FirebaseDatabaseManager : MonoBehaviour
     }
 
     void FirebaseInitializedCallback(){
-        _db = FirebaseDatabase.DefaultInstance.RootReference;
+        db = FirebaseDatabase.DefaultInstance;
         // isInitialized = true;
     }
 
