@@ -8,11 +8,17 @@ public class PlayerData {
     public int points = 0;
     public string lastPlayedId;
     public int lastCompletedIndex;
+    public string lastPlayedSeason;
     public string playerName;
     public string profileLink;
     public bool isLinked;
     public bool isFirstTime;
     public bool isTutorialComplete;
+
+    public string authProvider;
+    public string email;
+    public string fullName;
+    public string userId;
 
     public PlayerData() {
         this.playingLevels = new List<SudokuLevel>();
@@ -22,16 +28,11 @@ public class PlayerData {
         this.isFirstTime = true;
         this.isTutorialComplete = false;
         this.lastCompletedIndex = 0;
+        this.authProvider = "offline";
+        this.email = "null";
+        this.fullName = "Charicha Studio";
+        this.userId = "Charicha ID";
+        this.lastPlayedSeason = SudokuUtils.season;
     }
 
-}
-
-[Serializable]
-public class OnlinePlayerData {
-    public string authProvider;
-    public string email;
-    public string fullName;
-    public string userId;
-    public int score;
-    public int lastCompletedIndex;
 }

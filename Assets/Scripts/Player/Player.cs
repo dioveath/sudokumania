@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-using Firebase.Database;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -34,6 +32,9 @@ public class Player : MonoBehaviour
 
     public void SaveCurrentPlayerData(){
 	SaveManager.Instance.SavePlayerData(playerData);
+	if(playerData.isLinked) {
+            AuthManager.Instance().SavePlayerToDB(playerData);
+        }
     }
 
     public void AddPlayingSudokuLevel(SudokuLevel level){
@@ -59,14 +60,5 @@ public class Player : MonoBehaviour
         Debug.Log("Not found sudoku level with id: " + id);
         return null;
     }
-
-    public async Task<PlayerData> GetOnlinePlayerData(string id){
-        DataSnapshot snapshot = await FirebaseDatabaseManager.Instance.db.GetReference("players/" + id).GetValueAsync();
-        string json = snapshot.GetRawJsonValue();
-        return JsonUtility.FromJson<PlayerData>(json);
-    }
-
-    // public async bool SaveOnlinePlayerData(string id){
-    // }
 
 }

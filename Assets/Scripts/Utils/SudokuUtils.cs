@@ -351,11 +351,8 @@ public class SudokuUtils
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 9; j++){
                 result += puzzle[i, j];
-		// if(j != 8 || i != 8  )
-		//     result += ", ";
             }
         }
-	// Debug.Log("")
         return result;
     }
 
@@ -419,6 +416,11 @@ public class SudokuLevel {
     public bool isCompleted;
     public float lastElapsedTime;
     public int index;
+
+    // NOTE: copy of 2D array, coverted to string for DB JSON save
+    public string sudokuArrayString;
+    public string inputSudokuArrayString;
+    public string validSolutionString;
 
     public SudokuLevel(string __id, int[,] __sudokuArray, int[,] __inputSudokuArray, int[,] __validSolution, int points, int __index){
         this.id = __id;

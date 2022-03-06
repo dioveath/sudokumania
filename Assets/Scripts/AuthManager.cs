@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using Firebase.Auth;
 using Firebase.Extensions;
+using Firebase.Database;
+using System.Threading.Tasks;
 
 public class AuthManager : MonoBehaviour
 {
@@ -110,7 +112,7 @@ public class AuthManager : MonoBehaviour
 	}
     }
 
-    void AuthStateChanged(object sender, System.EventArgs eventArgs){
+    async void AuthStateChanged(object sender, System.EventArgs eventArgs){
         isSignedIn = _auth.CurrentUser != null;
 
         if(isSignedIn){
@@ -125,10 +127,22 @@ public class AuthManager : MonoBehaviour
             Player.Instance.playerData.playerName = "";
         }
 
-	if(isSignedIn)
+	if(isSignedIn) {
             Player.Instance.playerData.isLinked = true;
-        else
-            Player.Instance.playerData.isLinked = false;
+	    PlayerData onlinePlayerData = await GetPlayerDataFromDB(_auth.CurrentUser.UserId);
+	    if(onlinePlayerData == null) {
+                onlinePlayerData = new PlayerData();
+                onlinePlayerData = Player.Instance.playerData;
+                onlinePlayerData.userId = _auth.CurrentUser.UserId;
+                onlinePlayerData.email = _auth.CurrentUser.Email;
+                onlinePlayerData.fullName = _auth.CurrentUser.DisplayName;
+                SavePlayerToDB(onlinePlayerData);
+	    } else {
+		Player.Instance.playerData = onlinePlayerData;
+	    }	    
+	} else {
+            Player.Instance.playerData = new PlayerData();
+        }
 
         Player.Instance.SaveCurrentPlayerData();
         authStateChangedUEvent?.Invoke(_auth.CurrentUser);
@@ -139,8 +153,42 @@ public class AuthManager : MonoBehaviour
         FacebookAuthManager.Instance().LogOut();	
 	loginErrorDialogData.headerText = "LOGOUT SUCCESSFUL";
         loginErrorDialogData.bodyText = "Logged out!";
-        DialogManager.Instance.ShowDialog(loginErrorDialogData);	    			
+        DialogManager.Instance.ShowDialog(loginErrorDialogData);
     }
+
+    public void SavePlayerToDB(PlayerData pd){
+        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+        for(int i = 0; i < pd.playingLevels.Count; i++){
+            pd.playingLevels[i].sudokuArrayString = SudokuUtils.PuzzleToString(pd.playingLevels[i].sudokuArray);
+            pd.playingLevels[i].inputSudokuArrayString = SudokuUtils.PuzzleToString(pd.playingLevels[i].inputSudokuArray);
+            pd.playingLevels[i].validSolutionString = SudokuUtils.PuzzleToString(pd.playingLevels[i].validSolution);	    	    
+        }
+	string json = JsonUtility.ToJson(pd);
+        dbRef.Child("players").Child(pd.userId).SetRawJsonValueAsync(json).ContinueWith(task => {
+	    if(task.IsFaulted){
+                Debug.LogError("Error: " + task.Exception);
+            }
+	    if(task.IsCompleted) {
+                Debug.Log("Player Data saved!");
+            }
+	});
+    }
+
+    public async Task<PlayerData> GetPlayerDataFromDB(string userId){
+        DataSnapshot snapshot = await FirebaseDatabase.DefaultInstance.GetReference("players/" + userId).GetValueAsync();
+	if(!snapshot.Exists) return null;
+
+        string json = snapshot.GetRawJsonValue();
+	PlayerData pd = JsonUtility.FromJson<PlayerData>(json);
+
+        for(int i = 0; i < pd.playingLevels.Count; i++){
+            pd.playingLevels[i].sudokuArray = SudokuUtils.StringToPuzzle(pd.playingLevels[i].sudokuArrayString);
+            pd.playingLevels[i].inputSudokuArray = SudokuUtils.StringToPuzzle(pd.playingLevels[i].inputSudokuArrayString);
+            pd.playingLevels[i].validSolution = SudokuUtils.StringToPuzzle(pd.playingLevels[i].validSolutionString);	    	    
+        }	
+
+        return pd;
+    }    
 
     void OnDestroy(){
         _auth.StateChanged -= AuthStateChanged;

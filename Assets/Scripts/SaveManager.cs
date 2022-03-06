@@ -55,12 +55,13 @@ public class SaveManager : MonoBehaviour {
 
     public void SaveGameSettings(){
         PlayerPrefs.SetInt("sound", settingsData.sound ? 1 : 0);
+        // PlayerPrefs.SetInt("isFirstTime", settingsData.isFirstTime ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
     public SettingsData LoadSettings(){
-        Debug.Log("Loading settings...!");
         SettingsData sd = new SettingsData(PlayerPrefs.GetInt("sound", 1) == 0 ? false : true);
-        settingsData = sd;
+        // settingsData = sd;
         return sd;
     }
 
@@ -86,8 +87,10 @@ public class SaveManager : MonoBehaviour {
 [System.Serializable]
 public class SettingsData {
     public bool sound;
+    // public bool isFirstTime;
 
     public SettingsData(bool sound){
 	this.sound = sound;
+        // this.isFirstTime = true;
     }
 }

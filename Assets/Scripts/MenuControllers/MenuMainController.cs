@@ -120,7 +120,7 @@ public class MenuMainController : MonoBehaviour
         }
     }
 
-    public async void OnAuthStateChanged(FirebaseUser user){
+    public void OnAuthStateChanged(FirebaseUser user){
 	if(_loadingTween != null) {
             _loadingTween.OnComplete(() => {
 		SetFacebookStatus(user != null);
@@ -132,15 +132,13 @@ public class MenuMainController : MonoBehaviour
 	    SetFacebookStatus(user != null);	    
 	}
 
+	SetSudokuPoints(Player.Instance.playerData.points);
 	if(user != null){
 	    SetWelcomeMessage(user.DisplayName);
-            int highScore = await LeaderboardManager.Instance.GetHighscore(user.DisplayName);
-            Player.Instance.playerData.points = highScore;
-            Player.Instance.SaveCurrentPlayerData();
-            SetSudokuPoints(highScore);
         } else {
-	    SetWelcomeMessage("");
+	    SetWelcomeMessage("Fellow Traveller!");
 	}
+
     }
 
 }
