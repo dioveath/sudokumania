@@ -60,7 +60,8 @@ public class SaveManager : MonoBehaviour {
     }
 
     public SettingsData LoadSettings(){
-        SettingsData sd = new SettingsData(PlayerPrefs.GetInt("sound", 1) == 0 ? false : true);
+        SettingsData sd = new SettingsData(PlayerPrefs.GetInt("sound", 1) == 1 ? true : false);
+        Debug.Log(sd.sound);
         // settingsData = sd;
         return sd;
     }

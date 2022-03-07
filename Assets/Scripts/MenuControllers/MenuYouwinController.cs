@@ -39,7 +39,7 @@ public class MenuYouwinController : MonoBehaviour
         Player.Instance.AddPlayingSudokuLevel(wonLevel);
 
 	if(AuthManager.Instance().isSignedIn){
-            string username = Player.Instance.playerData.playerName;
+            string username = Player.Instance.playerData.fullName;
             LeaderboardManager.Instance.EnterNewLeaderboardEntry(
 		username,
 		Player.Instance.playerData.points,

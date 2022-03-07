@@ -57,7 +57,7 @@ public class MenuMainController : MonoBehaviour
 
         SetSudokuPoints(data.points);
         SetFacebookStatus(data.isLinked);
-        SetWelcomeMessage(data.playerName);
+        SetWelcomeMessage(data.fullName);
 	
         AuthManager.Instance().authStateChangedUEvent.AddListener(OnAuthStateChanged);
     }
@@ -132,12 +132,13 @@ public class MenuMainController : MonoBehaviour
 	    SetFacebookStatus(user != null);	    
 	}
 
-	SetSudokuPoints(Player.Instance.playerData.points);
-	if(user != null){
-	    SetWelcomeMessage(user.DisplayName);
-        } else {
-	    SetWelcomeMessage("Fellow Traveller!");
-	}
+        Init(Player.Instance.playerData);
+        // SetSudokuPoints(Player.Instance.playerData.points);
+        // if(user != null){
+        //     SetWelcomeMessage(user.DisplayName);
+        // } else {
+        //     SetWelcomeMessage("Fellow Traveller!");
+        // }
 
     }
 

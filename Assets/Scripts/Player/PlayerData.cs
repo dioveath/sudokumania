@@ -9,7 +9,6 @@ public class PlayerData {
     public string lastPlayedId;
     public int lastCompletedIndex;
     public string lastPlayedSeason;
-    public string playerName;
     public string profileLink;
     public bool isLinked;
     public bool isFirstTime;
@@ -30,7 +29,7 @@ public class PlayerData {
         this.lastCompletedIndex = 0;
         this.authProvider = "offline";
         this.email = "null";
-        this.fullName = "Charicha Studio";
+        this.fullName = "Fellow Traveller";
         this.userId = "Charicha ID";
         this.lastPlayedSeason = SudokuUtils.season;
     }

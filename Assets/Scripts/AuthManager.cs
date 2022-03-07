@@ -65,7 +65,7 @@ public class AuthManager : MonoBehaviour
             Firebase.Auth.Credential credential = Firebase.Auth.FacebookAuthProvider.GetCredential(accessToken);
 
             string profileLink = await FacebookAuthManager.Instance().GetProfileImageLink();
-	    if(profileLink == null){
+	    if(profileLink == null || profileLink == ""){
                 Debug.LogWarning("Couldn't retrieve profile URL");
                 loginErrorDialogData.headerText = "LOGIN ERROR";
                 loginErrorDialogData.bodyText = "Couldn't retrive Profile Picture of the User";
@@ -115,18 +115,6 @@ public class AuthManager : MonoBehaviour
     async void AuthStateChanged(object sender, System.EventArgs eventArgs){
         isSignedIn = _auth.CurrentUser != null;
 
-        if(isSignedIn){
-            Debug.Log("------SIGNED IN------");
-            Debug.Log(_auth.CurrentUser.UserId);
-            Debug.Log(_auth.CurrentUser.DisplayName);
-            Debug.Log(_auth.CurrentUser.Email);
-            Debug.Log(_auth.CurrentUser.IsEmailVerified);
-            Player.Instance.playerData.playerName = _auth.CurrentUser.DisplayName;
-            Debug.Log("------SIGNED IN------");	    
-        } else {
-            Player.Instance.playerData.playerName = "";
-        }
-
 	if(isSignedIn) {
             Player.Instance.playerData.isLinked = true;
 	    PlayerData onlinePlayerData = await GetPlayerDataFromDB(_auth.CurrentUser.UserId);
@@ -136,6 +124,7 @@ public class AuthManager : MonoBehaviour
                 onlinePlayerData.userId = _auth.CurrentUser.UserId;
                 onlinePlayerData.email = _auth.CurrentUser.Email;
                 onlinePlayerData.fullName = _auth.CurrentUser.DisplayName;
+                onlinePlayerData.points = Player.Instance.playerData.points;
                 SavePlayerToDB(onlinePlayerData);
 	    } else {
 		Player.Instance.playerData = onlinePlayerData;
