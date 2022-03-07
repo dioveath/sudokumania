@@ -230,6 +230,10 @@ public class GameManager : MonoBehaviour
 		SwitchState(GameState.GAMEPLAY);
 		SudokuManager.Instance().Init(SudokuUtils.allSudokuLevels[levelIndex]);
                 AudioManager.Instance().PlayAudio("click_wooden1");
+		if(Player.Instance.playerData.lastPlayedSeason != SudokuUtils.season){
+                    Player.Instance.playerData.lastPlayedSeason = SudokuUtils.season;
+                    Player.Instance.SaveCurrentPlayerData();
+                }
             });
         }
 
@@ -243,7 +247,7 @@ public class GameManager : MonoBehaviour
 	for (int i = 0; i < currentButtons.Count; i++) {
             if(i > (Player.Instance.playerData.lastCompletedIndex)){
                 currentButtons[i].interactable = false;
-            } else {
+            } else if (Player.Instance.playerData.lastPlayedSeason == SudokuUtils.season || i == 0){
                 currentButtons[i].interactable = true;		
 	    }	    
 	    currentButtons[i].gameObject.SetActive(true);
