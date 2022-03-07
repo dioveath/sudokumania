@@ -55,14 +55,17 @@ public class SaveManager : MonoBehaviour {
 
     public void SaveGameSettings(){
         PlayerPrefs.SetInt("sound", settingsData.sound ? 1 : 0);
-        // PlayerPrefs.SetInt("isFirstTime", settingsData.isFirstTime ? 1 : 0);
+        PlayerPrefs.SetInt("leaderboard", settingsData.isLeaderboardShowed ? 1 : 0);
+        PlayerPrefs.SetInt("season", settingsData.isSeasonShowed ? 1 : 0);
         PlayerPrefs.Save();
     }
 
     public SettingsData LoadSettings(){
-        SettingsData sd = new SettingsData(PlayerPrefs.GetInt("sound", 1) == 1 ? true : false);
-        Debug.Log(sd.sound);
-        // settingsData = sd;
+        SettingsData sd = new SettingsData();
+        sd.sound = PlayerPrefs.GetInt("sound", 1) == 1 ? true : false;
+        sd.isLeaderboardShowed = PlayerPrefs.GetInt("leaderboard", 0) == 1 ? true : false;
+	sd.isSeasonShowed = PlayerPrefs.GetInt("season", 0) == 1 ? true : false;
+        settingsData = sd;
         return sd;
     }
 
@@ -80,7 +83,6 @@ public class SaveManager : MonoBehaviour {
 	} catch (Exception e){
             Debug.LogError("Error: " + e.Message);
         }
-
     }
 
 }
@@ -88,10 +90,12 @@ public class SaveManager : MonoBehaviour {
 [System.Serializable]
 public class SettingsData {
     public bool sound;
-    // public bool isFirstTime;
+    public bool isLeaderboardShowed;
+    public bool isSeasonShowed;
 
-    public SettingsData(bool sound){
-	this.sound = sound;
-        // this.isFirstTime = true;
+    public SettingsData(){
+	this.sound = false;
+        this.isLeaderboardShowed = false;
+        this.isSeasonShowed = false;
     }
 }

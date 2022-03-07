@@ -13,6 +13,8 @@ public class MenuLeaderboardController : MonoBehaviour
     public Image loadingImage;
     public Sprite defaultProfileSprite;
 
+    public DialogData dialogData;
+
     private List<LeaderboardEntryUI> _entryTexts;
 
 
@@ -22,6 +24,13 @@ public class MenuLeaderboardController : MonoBehaviour
 
     public async void LoadLeaderboardEntry(){
         loadingImage.gameObject.SetActive(true);
+
+	if(!SaveManager.Instance.settingsData.isLeaderboardShowed) {
+	    DialogManager.Instance.ShowDialog(dialogData);
+            SaveManager.Instance.settingsData.isLeaderboardShowed = true;
+            SaveManager.Instance.SaveGameSettings();
+        }
+
         _entryTexts = new List<LeaderboardEntryUI>(highscoreHolder.GetComponentsInChildren<LeaderboardEntryUI>());
         _entryTexts.ForEach((t) => t.gameObject.SetActive(false));
         UpdateLeaderboardUI(await LeaderboardManager.Instance.GetLeaderboardEntries());

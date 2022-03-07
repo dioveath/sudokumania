@@ -4799,6 +4799,12 @@ MonoBehaviour:
   loadingImage: {fileID: 116835715}
   defaultProfileSprite: {fileID: 21300000, guid: 0589d3eb4e6ef4d269663222f1a92efa,
     type: 3}
+  dialogData:
+    headerText: Leaderboard
+    bodyText: This is where you compete with the best Sudoku Players!
+    yesText: Okay
+    noText: 
+    isOneButton: 1
 --- !u!1 &1211144537
 GameObject:
   m_ObjectHideFlags: 0
@@ -5021,6 +5027,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settingsData:
     sound: 0
+    isLeaderboardShowed: 0
+    isSeasonShowed: 0
 --- !u!114 &1212236689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6146,6 +6154,12 @@ MonoBehaviour:
   loadingUI: {fileID: 1281295268}
   scrollRect: {fileID: 1808368000}
   seasonTextUI: {fileID: 1211144539}
+  sequence:
+    title: Sudoku Season
+    sentences:
+    - Every week new Sudoku Puzzles will be available. New Season will be be available
+      every week.
+    - Earn points every week and compete in World's leaderboard.
 --- !u!1 &1343880072
 GameObject:
   m_ObjectHideFlags: 0
@@ -7477,7 +7491,7 @@ MonoBehaviour:
     points: 0
     lastPlayedId: 
     lastCompletedIndex: 0
-    playerName: 
+    lastPlayedSeason: 2022-March-1
     profileLink: 
     isLinked: 0
     isFirstTime: 1

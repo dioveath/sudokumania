@@ -17,8 +17,9 @@ public class AudioManager : MonoBehaviour
 
     void Awake(){
         _instance = this;
-	SetSound(SaveManager.Instance.settingsData.sound);	
+	SetSound(SaveManager.Instance.settingsData.sound);
     }
+
 
     public static AudioManager Instance(){
         return _instance;
@@ -29,9 +30,11 @@ public class AudioManager : MonoBehaviour
     }
 
     public void SetSound(bool sound){
-	_on = sound;
-	if(_on && _musicSource.clip != null)
+        _on = sound;
+        Debug.Log("sound: " + _on);
+        if(_on && _musicSource.clip != null) {
 	    _musicSource.Play();
+	}
 	else
 	    _musicSource.Pause();	
     }

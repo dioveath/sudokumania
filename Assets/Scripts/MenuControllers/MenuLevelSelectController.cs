@@ -8,11 +8,20 @@ public class MenuLevelSelectController : MonoBehaviour
     public ScrollRect scrollRect;
     public Text seasonTextUI;
 
+    public DialogSequence sequence;
+
     void Start(){
     }
 
     public void Init(){
         seasonTextUI.text = "Season: " + SudokuUtils.season;
+
+	if(!SaveManager.Instance.settingsData.isSeasonShowed) {
+	    DialogManager.Instance.StartDialogSequence(sequence);
+            SaveManager.Instance.settingsData.isSeasonShowed = true;
+            SaveManager.Instance.SaveGameSettings();
+        }
+
     }
 
     public void Cleanup(){
