@@ -37,7 +37,7 @@ public class LeaderboardManager : MonoBehaviour
             return entries;
         }
 
-        DataSnapshot snapshot = await _dbRef.GetReference("Scores").OrderByChild("highscore").LimitToFirst(10).GetValueAsync();
+        DataSnapshot snapshot = await _dbRef.GetReference("Scores").OrderByChild("highscore").LimitToLast(10).GetValueAsync();
 	if(snapshot == null) {
             entries.Add(new LeaderboardEntry("Couldn't Load Data!", 0, null));	    
 	    Debug.LogWarning($"Loading leaderboard failed with");

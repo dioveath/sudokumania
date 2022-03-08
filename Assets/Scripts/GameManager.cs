@@ -171,14 +171,15 @@ public class GameManager : MonoBehaviour
 	}
     }
 
+
     // this should be moved to MenuLevelSelectcontroller
+    private List<Button> currentLevelButtons = new List<Button>();
     async void HandleInitializeLevels(){
         loadingUI.SetActive(true);
 
-        List<Button> currentButtons = levelButtonHolder.GetComponentsInChildren<Button>().ToList();
-        int currentTotalButtons = currentButtons.Count;	
-        for (int i = 0; i < currentTotalButtons; i++)
-	    currentButtons[i].gameObject.SetActive(false);
+        // int currentTotalButtons = currentLevelButtons.Count;	
+        // for (int i = 0; i < currentTotalButtons; i++)
+	//     currentLevelButtons[i].gameObject.SetActive(false);
 	
 	if(FirebaseManager.Instance().isInitialized) {
 	    await SudokuUtils.GetAllLevels(FirebaseDatabase.DefaultInstance);
@@ -190,16 +191,17 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        foreach(Button button in levelButtonHolder.GetComponentsInChildren<Button>()){
+            DestroyImmediate(button.gameObject);
+        }
+
+        currentLevelButtons.Clear();
         int levelsCount = SudokuUtils.allSudokuLevels.Count;
         RectTransform rt = allLevelsHolder.GetComponent<RectTransform>();
         for (int i = 0; i < levelsCount; i++){
             GameObject buttonObj;
-            if(i >= currentTotalButtons) {
-		buttonObj = Instantiate(levelButton, Vector3.zero, Quaternion.identity);
-		currentButtons.Add(buttonObj.GetComponent<Button>());
-	    } else {
-                buttonObj = currentButtons[i].gameObject;
-            }
+	    buttonObj = Instantiate(levelButton, Vector3.zero, Quaternion.identity);
+	    currentLevelButtons.Add(buttonObj.GetComponent<Button>());
 
             RectTransform rect = buttonObj.GetComponent<RectTransform>();
             rect.SetParent(levelButtonHolder.transform);
@@ -237,20 +239,13 @@ public class GameManager : MonoBehaviour
             });
         }
 
-	if(currentTotalButtons > levelsCount){
-            for (int i = levelsCount; i < currentTotalButtons; i++){
-                currentButtons[i].gameObject.SetActive(false);
-                DestroyImmediate(currentButtons[i]);
-            }
-	}
-
-	for (int i = 0; i < currentButtons.Count; i++) {
+	for (int i = 0; i < currentLevelButtons.Count; i++) {
             if(i > (Player.Instance.playerData.lastCompletedIndex)){
-                currentButtons[i].interactable = false;
-            } else if (Player.Instance.playerData.lastPlayedSeason == SudokuUtils.season || i == 0){
-                currentButtons[i].interactable = true;		
+                currentLevelButtons[i].interactable = false;
+            } else if (i == 0){
+                currentLevelButtons[i].interactable = true;		
 	    }	    
-	    currentButtons[i].gameObject.SetActive(true);
+	    currentLevelButtons[i].gameObject.SetActive(true);
 	}
 
         loadingUI.SetActive(false);

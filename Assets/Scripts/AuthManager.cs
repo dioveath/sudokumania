@@ -127,6 +127,10 @@ public class AuthManager : MonoBehaviour
                 onlinePlayerData.points = Player.Instance.playerData.points;
                 SavePlayerToDB(onlinePlayerData);
 	    } else {
+		if(Player.Instance.playerData.lastPlayedSeason != SudokuUtils.season){
+                    onlinePlayerData.lastCompletedIndex = 0;
+		    SavePlayerToDB(onlinePlayerData);		
+		}
 		Player.Instance.playerData = onlinePlayerData;
 	    }	    
 	} else {
